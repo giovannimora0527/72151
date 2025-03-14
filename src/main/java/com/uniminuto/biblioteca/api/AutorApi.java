@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequestMapping("/autor")
 public interface AutorApi {
     /**
-     * Metodo para listar los autores registrados en bd.
+     * Metodo para listar los autores registrados en bd. hola 
      *
      * @return Lista de autores.
      * @throws BadRequestException excepcion.
