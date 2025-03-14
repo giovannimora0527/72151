@@ -14,10 +14,10 @@ import org.springframework.web.bind.annotation.RequestParam;
  * @author lmora
  */
 @CrossOrigin(origins = "*")
-@RequestMapping("/autor")
+@RequestMapping("/autor") 
 public interface AutorApi {
     /**
-     * Metodo para listar los autores registrados en bd. hola 
+     * Metodo para listar los autores registrados en bd.
      *
      * @return Lista de autores.
      * @throws BadRequestException excepcion.
