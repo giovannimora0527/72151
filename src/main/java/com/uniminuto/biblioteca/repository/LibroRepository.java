@@ -19,4 +19,7 @@ public interface LibroRepository extends
     // Método para buscar un libro por nombre (coincidencia de subcadena, case sensitive)
     @Query(value = "SELECT * FROM libros WHERE BINARY titulo LIKE CONCAT('%', :titulo, '%')", nativeQuery = true)
     Libro obtenerLibroPorNombre(@Param("titulo") String titulo);
+    
+    // Método para listar libros cuyo anio_publicacion esté entre fechaInicio y fechaFin (inclusive)
+    List<Libro> findByAnioPublicacionBetween(Integer anioPublicacionInicio, Integer anioPublicacionFin);
 }

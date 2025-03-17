@@ -66,4 +66,18 @@ public class LibroServiceImpl implements LibroService {
         }
         return libro;
     }
+    
+    @Override
+    public List<Libro> obtenerLibroPorFechaPublicacion(Integer anioPublicacionInicio, Integer anioPublicacionFin) throws BadRequestException {
+        // Validar que las fechas sean válidas
+        if (anioPublicacionInicio == null || anioPublicacionFin == null) {
+            throw new BadRequestException("El rango de fechas no puede ser nulo.");
+        }
+        if (anioPublicacionInicio > anioPublicacionFin) {
+            throw new BadRequestException("La fecha de inicio no puede ser mayor a la fecha final.");
+        }
+        // Retorna la lista de libros cuyo anio_publicacion esté entre las fechas indicadas
+        return libroRepository.findByAnioPublicacionBetween(anioPublicacionInicio, anioPublicacionFin);
+    }
+    
 }
