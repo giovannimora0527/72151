@@ -4,6 +4,8 @@ import com.uniminuto.biblioteca.entity.Autor;
 import com.uniminuto.biblioteca.entity.Usuario;
 
 import java.util.List;
+import java.util.Optional;
+
 import org.apache.coyote.BadRequestException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -29,4 +31,9 @@ public interface UsuarioApi {
         ResponseEntity<List<Usuario>> listarUsuario()
                         throws BadRequestException;
 
+        @RequestMapping(value = "/buscar", produces = { "application/json" }, consumes = {
+                        "application/json" }, method = RequestMethod.GET)
+        ResponseEntity<Optional<Usuario>> findUserByEmail(
+                        @RequestParam String correo)
+                        throws BadRequestException;
 }
