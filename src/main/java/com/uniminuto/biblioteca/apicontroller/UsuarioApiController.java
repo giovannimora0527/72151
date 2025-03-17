@@ -25,6 +25,12 @@ public class UsuarioApiController implements UsuarioApi {
     public ResponseEntity<List<Usuario>> listarUsuarios() throws BadRequestException {
        return ResponseEntity.ok(this.usuarioService.obtenerListadoUsuarios());
     }
-
+    
+    @Override
+    public ResponseEntity<List<Usuario>> listarUsuarioPorCorreo(String correo) 
+            throws BadRequestException {
+       return ResponseEntity.ok(this.usuarioService
+               .obtenerListadoUsuarioPorCorreo(correo));
+    }
     
 }

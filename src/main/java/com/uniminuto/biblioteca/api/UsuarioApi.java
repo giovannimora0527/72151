@@ -30,4 +30,18 @@ public interface UsuarioApi {
     ResponseEntity<List<Usuario>> listarUsuarios()
             throws BadRequestException;
     
+    
+    /**
+     * Metodo para listar los usuarios por correo registrados en bd.
+     *
+     * @return Lista de usuarios.
+     * @throws BadRequestException excepcion.
+     */
+    @RequestMapping(value = "/listar-usuario-correo",
+            produces = {"application/json"},
+            consumes = {"application/json"},
+            method = RequestMethod.GET)
+    ResponseEntity<List<Usuario>> listarUsuarioPorCorreo(@RequestParam String correo)
+            throws BadRequestException;
+    
 }

@@ -10,4 +10,6 @@ import org.apache.coyote.BadRequestException;
  */
 public interface UsuarioService {
     List<Usuario> obtenerListadoUsuarios() throws BadRequestException;
+    
+    List<Usuario> obtenerListadoUsuarioPorCorreo(String correo) throws BadRequestException;
 }
