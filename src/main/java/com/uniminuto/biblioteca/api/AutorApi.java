@@ -9,15 +9,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-/**
+/** 
  *
  * @author lmora
  */
 @CrossOrigin(origins = "*")
 @RequestMapping("/autor") 
 public interface AutorApi {
+
     /**
-     * Metodo para listar los autores registrados en bd.
+     * Metodo para listar todos los autores registrados en bd.
      *
      * @return Lista de autores.
      * @throws BadRequestException excepcion.
@@ -29,8 +30,9 @@ public interface AutorApi {
     ResponseEntity<List<Autor>> listarAutores()
             throws BadRequestException;
     
+
      /**
-     * Metodo para listar los autores registrados en bd.
+     * Metodo para listar los autores por nacionalidad registrados en bd.
      *
      * @param nacionalidad nacionalidad del autor.
      * @return Lista de autores.
@@ -44,8 +46,9 @@ public interface AutorApi {
      @RequestParam String nacionalidad)
             throws BadRequestException;
     
+
      /**
-     * Metodo para listar los autores registrados en bd.
+     * Metodo para listar los autores por id registrados en bd.
      *
      * @return Lista de autores.
      * @throws BadRequestException excepcion.

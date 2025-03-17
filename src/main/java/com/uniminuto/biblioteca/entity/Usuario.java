@@ -1,7 +1,7 @@
 package com.uniminuto.biblioteca.entity;
 
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.sql.Timestamp;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -12,40 +12,46 @@ import lombok.Data;
 
 /** 
  *
- * @author lmora
+ * @author 853345_MiguelRayo
  */
 @Data
 @Entity
-@Table(name = "autores")
-public class Autor implements Serializable {
+@Table(name = "usuarios")
+public class Usuario implements Serializable {
     /**
      * Id serializable.
      */
     private static final long serialVersionUID = 1L;
     
     /**
-     * Identificador único del autor.
+     * Identificador único del usuario.
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_autor")
-    private Integer autorId;
+    @Column(name = "id_usuario")
+    private Integer usuarioId;
     
     /**
-     * Nombre del autor.
+     * Nombre del usuario.
      */
     @Column(name = "nombre", nullable = false, length = 100)
     private String nombre;
     
     /**
-     * Nacionalidad del autor.
+     * Correo del usuario.
      */
-    @Column(name = "nacionalidad", length = 50)
-    private String nacionalidad;
+    @Column(name = "correo", nullable = false, unique = true, length = 100)
+    private String correo;
     
     /**
-     * Fecha de nacimiento del autor.
+     * Telefono del usuario.
      */
-    @Column(name = "fecha_nacimiento")
-    private LocalDate fechaNacimiento;
+    @Column(name = "telefono", length = 20)
+    private String telefono;
+    
+    /**
+     * Fecha de registro del usuario.
+     */
+    @Column(name = "fecha_registro")
+    private Timestamp fecha_registro;
 }

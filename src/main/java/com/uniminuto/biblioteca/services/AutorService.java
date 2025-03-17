@@ -6,7 +6,7 @@ import org.apache.coyote.BadRequestException;
 
 /**
  *
- * @author lmora
+ * @author lmora 
  */
 public interface AutorService {
     List<Autor> obtenerListadoAutores();
