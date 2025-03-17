@@ -12,4 +12,6 @@ public interface LibroService {
     List<Libro> listarLibros() throws BadRequestException;
     
     Libro obtenerLibroId(Integer libroId) throws BadRequestException;
+    
+    List<Libro> obtenerLibroPorIdAutor(Integer autor) throws BadRequestException;
 }

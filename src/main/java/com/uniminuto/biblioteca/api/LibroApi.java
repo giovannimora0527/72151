@@ -18,9 +18,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface LibroApi {
 
     /**
-     * Metodo para listar los autores registrados en bd.
+     * Metodo para listar los libros registrados en bd.
      *
-     * @return Lista de autores.
+     * @return Lista de libros.
      * @throws BadRequestException excepcion.
      */
     @RequestMapping(value = "/listar",
@@ -31,7 +31,7 @@ public interface LibroApi {
             throws BadRequestException;
     
      /**
-     * Metodo para listar los autores registrados en bd.
+     * Metodo para listar los libros por id registrados en bd.
      *
      * @param libroId Id del libro.
      * @return Lista de autores.
@@ -42,5 +42,19 @@ public interface LibroApi {
             consumes = {"application/json"},
             method = RequestMethod.GET)
     ResponseEntity<Libro> obtenerLibroPorId(@RequestParam Integer libroId)
+            throws BadRequestException;
+    
+     /**
+     * Metodo para listar los libros por id del autor registrados en bd.
+     *
+     * @param libroId Id del libro.
+     * @return Lista de autores.
+     * @throws BadRequestException excepcion.
+     */
+    @RequestMapping(value = "/obtener-libro-id-autor",
+            produces = {"application/json"},
+            consumes = {"application/json"},
+            method = RequestMethod.GET)
+    ResponseEntity<List<Libro>> obtenerLibroPorIdAutor(@RequestParam Integer autor)
             throws BadRequestException;
 }
