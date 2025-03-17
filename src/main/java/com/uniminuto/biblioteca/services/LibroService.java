@@ -14,4 +14,8 @@ public interface LibroService {
     Libro obtenerLibroId(Integer libroId) throws BadRequestException;
     
     List<Libro> obtenerLibroPorIdAutor(Integer autor) throws BadRequestException;
+    
+    // Método para buscar libro por nombre
+    Libro obtenerLibroPorNombre(String titulo) throws BadRequestException;
+    
 }

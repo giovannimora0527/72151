@@ -49,4 +49,21 @@ public class LibroServiceImpl implements LibroService {
         // Retorna la lista de libros asociados al autor; si no hay, retorna lista vacía.
         return libroRepository.findByAutor_AutorId(autor);
     }
+    
+    @Override
+    public Libro obtenerLibroPorNombre(String titulo) throws BadRequestException {
+        if (titulo == null || titulo.isEmpty()) {
+            throw new BadRequestException("El nombre del libro no puede estar vacío.");
+        }
+        
+        // Eliminar espacios al inicio y final, y normalizar espacios internos.
+        titulo = titulo.trim().replaceAll("\\s+", " ");
+        
+        // Se utiliza la consulta case sensitive para buscar coincidencias en el título.
+        Libro libro = libroRepository.obtenerLibroPorNombre(titulo);
+        if (libro == null) {
+            throw new BadRequestException("No se encontró ningún libro con el nombre que contenga: " + titulo);
+        }
+        return libro;
+    }
 }

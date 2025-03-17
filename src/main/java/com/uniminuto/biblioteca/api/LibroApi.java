@@ -57,4 +57,18 @@ public interface LibroApi {
             method = RequestMethod.GET)
     ResponseEntity<List<Libro>> obtenerLibroPorIdAutor(@RequestParam Integer autor)
             throws BadRequestException;
+    
+     /**
+     * Metodo para listar los libros por nombre del autor registrados en bd.
+     *
+     * @param libroId Id del libro.
+     * @return Lista de autores.
+     * @throws BadRequestException excepcion.
+     */
+    @RequestMapping(value = "/obtener-libro-nombre",
+            produces = {"application/json"},
+            consumes = {"application/json"},
+            method = RequestMethod.GET)
+    ResponseEntity<Libro> obtenerLibroPorNombre(@RequestParam String titulo)
+            throws BadRequestException;
 }
