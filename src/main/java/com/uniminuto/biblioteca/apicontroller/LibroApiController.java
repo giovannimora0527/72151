@@ -15,18 +15,23 @@ import org.springframework.http.ResponseEntity;
  */
 @RestController
 public class LibroApiController implements LibroApi {
-    
-    @Autowired
-    private LibroService libroService;
-    
-    @Override
-    public ResponseEntity<List<Libro>> listarLibros()
-            throws BadRequestException {
-        return ResponseEntity.ok(this.libroService.listarLibros());
-    }
 
-    @Override
-    public ResponseEntity<Libro> obtenerLibroPorId(Integer libroId) throws BadRequestException {
-      return ResponseEntity.ok(this.libroService.obtenerLibroId(libroId));
-    }
+  @Autowired
+  private LibroService libroService;
+
+  @Override
+  public ResponseEntity<List<Libro>> listarLibros()
+      throws BadRequestException {
+    return ResponseEntity.ok(this.libroService.listarLibros());
+  }
+
+  @Override
+  public ResponseEntity<Libro> obtenerLibroPorId(Integer libroId) throws BadRequestException {
+    return ResponseEntity.ok(this.libroService.obtenerLibroId(libroId));
+  }
+
+  @Override
+  public ResponseEntity<List<Libro>> obtenerLibroPorAutor(Integer autorId) throws BadRequestException {
+    return ResponseEntity.ok(this.libroService.obtenerLibroPorAutor(autorId));
+  }
 }

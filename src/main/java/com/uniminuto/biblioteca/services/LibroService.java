@@ -10,6 +10,8 @@ import org.apache.coyote.BadRequestException;
  */
 public interface LibroService {
     List<Libro> listarLibros() throws BadRequestException;
-    
+
     Libro obtenerLibroId(Integer libroId) throws BadRequestException;
+
+    List<Libro> obtenerLibroPorAutor(Integer autorId) throws BadRequestException;
 }
