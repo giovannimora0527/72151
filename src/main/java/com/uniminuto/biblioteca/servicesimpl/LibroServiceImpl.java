@@ -47,4 +47,20 @@ public class LibroServiceImpl implements LibroService {
     }
     return libros;
   }
+
+  @Override
+  public Optional<Libro> obtenerLibroPorTitulo(String name) throws BadRequestException {
+    if (name == null || name.trim().isEmpty()) {
+      throw new BadRequestException("El titulo del libro no puede estar vacío");
+    }
+
+    Optional<Libro> libro = libroRepository.findByTitulo(name);
+
+    if (libro.isEmpty()) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Libro no encontrado con el titulo: " + name);
+    }
+
+    return libro;
+  }
+
 }

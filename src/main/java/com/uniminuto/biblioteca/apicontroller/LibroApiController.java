@@ -2,6 +2,8 @@ package com.uniminuto.biblioteca.apicontroller;
 
 import com.uniminuto.biblioteca.api.LibroApi;
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.web.bind.annotation.RestController;
 import com.uniminuto.biblioteca.entity.Libro;
 import com.uniminuto.biblioteca.services.LibroService;
@@ -33,5 +35,10 @@ public class LibroApiController implements LibroApi {
   @Override
   public ResponseEntity<List<Libro>> obtenerLibroPorAutor(Integer autorId) throws BadRequestException {
     return ResponseEntity.ok(this.libroService.obtenerLibroPorAutor(autorId));
+  }
+
+  @Override
+  public ResponseEntity<Optional<Libro>> obtenerLibroPorTitulo(String titulo) throws BadRequestException {
+    return ResponseEntity.ok(this.libroService.obtenerLibroPorTitulo(titulo));
   }
 }
