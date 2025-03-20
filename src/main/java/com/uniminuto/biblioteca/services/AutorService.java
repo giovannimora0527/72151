@@ -2,7 +2,6 @@ package com.uniminuto.biblioteca.services;
 
 import com.uniminuto.biblioteca.entity.Autor;
 import java.util.List;
-import org.apache.coyote.BadRequestException;
 
 /**
  *
@@ -11,7 +10,5 @@ import org.apache.coyote.BadRequestException;
 public interface AutorService {
     List<Autor> obtenerListadoAutores();
     
-    List<Autor> obtenerListadoAutoresPorNacionalidad(String nacionalidad) throws BadRequestException;
-    
-    Autor obtenerAutorPorId(Integer autorId) throws BadRequestException;
+    Autor obtenerAutoresPorId(Integer autorId);
 }

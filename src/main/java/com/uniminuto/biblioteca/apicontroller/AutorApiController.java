@@ -7,8 +7,8 @@ import java.util.List;
 import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 /**
  *
  * @author lmora
@@ -27,16 +27,7 @@ public class AutorApiController implements AutorApi {
     }
 
     @Override
-    public ResponseEntity<List<Autor>> listarAutoresByNacionalidad(String nacionalidad) 
-            throws BadRequestException {
-       return ResponseEntity.ok(this.autorService
-               .obtenerListadoAutoresPorNacionalidad(nacionalidad));
+    public ResponseEntity<Autor> listarAutorId(@RequestParam Integer autorId) throws BadRequestException {
+        return ResponseEntity.ok(this.autorService.obtenerAutoresPorId(autorId));
     }
-
-    @Override
-    public ResponseEntity<Autor> listarAutorPorId(Integer autorId) throws BadRequestException {
-       return ResponseEntity.ok(this.autorService.obtenerAutorPorId(autorId));
-    }
-
-    
 }

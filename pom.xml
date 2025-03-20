@@ -79,6 +79,12 @@
             <artifactId>spring-data-jpa</artifactId>          
             <type>jar</type>
         </dependency>
+        <dependency>
+            <groupId>cloud.agileframework</groupId>
+            <artifactId>agile-sql</artifactId>
+            <version>2.0.0</version>
+            <type>jar</type>
+        </dependency>
     </dependencies>
     <build>
         <plugins>

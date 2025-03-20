@@ -1,6 +1,7 @@
 package com.uniminuto.biblioteca.api;
 
 import com.uniminuto.biblioteca.entity.Autor;
+import com.uniminuto.biblioteca.model.TestRs;
 import java.util.List;
 import org.apache.coyote.BadRequestException;
 import org.springframework.http.ResponseEntity;
@@ -29,32 +30,12 @@ public interface AutorApi {
     ResponseEntity<List<Autor>> listarAutores()
             throws BadRequestException;
     
-     /**
-     * Metodo para listar los autores registrados en bd.
-     *
-     * @param nacionalidad nacionalidad del autor.
-     * @return Lista de autores.
-     * @throws BadRequestException excepcion.
-     */
-    @RequestMapping(value = "/listar-nacionalidad",
-            produces = {"application/json"},
-            consumes = {"application/json"},
-            method = RequestMethod.GET)
-    ResponseEntity<List<Autor>> listarAutoresByNacionalidad(
-     @RequestParam String nacionalidad)
-            throws BadRequestException;
     
-     /**
-     * Metodo para listar los autores registrados en bd.
-     *
-     * @return Lista de autores.
-     * @throws BadRequestException excepcion.
-     */
     @RequestMapping(value = "/listar-autor-id",
             produces = {"application/json"},
             consumes = {"application/json"},
             method = RequestMethod.GET)
-    ResponseEntity<Autor> listarAutorPorId(@RequestParam Integer autorIds)
+    ResponseEntity<Autor> listarAutorId(@RequestParam Integer autorId)
             throws BadRequestException;
     
 }
