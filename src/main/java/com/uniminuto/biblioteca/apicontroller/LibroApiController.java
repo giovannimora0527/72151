@@ -41,4 +41,8 @@ public class LibroApiController implements LibroApi {
   public ResponseEntity<Optional<Libro>> obtenerLibroPorTitulo(String titulo) throws BadRequestException {
     return ResponseEntity.ok(this.libroService.obtenerLibroPorTitulo(titulo));
   }
+  @Override
+  public ResponseEntity<List<Libro>> obtenerLibroPorRangoDeAnios(int fechaInicio, int fechaFin) throws BadRequestException {
+    return ResponseEntity.ok(this.libroService.obtenerLibrosPorRangoDeAnios(titulo));
+
 }

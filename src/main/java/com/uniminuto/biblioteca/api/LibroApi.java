@@ -55,7 +55,7 @@ public interface LibroApi {
                         throws BadRequestException;
 
         /**
-         * Metodo para listar los libros de los autores registrados en bd.
+         * Metodo para listar los libros por año de publicación
          *
          * @param titulo Id del libro.
          * @return Lista de libros de autores.
@@ -65,4 +65,16 @@ public interface LibroApi {
                         "application/json" }, method = RequestMethod.GET)
         ResponseEntity<Optional<Libro>> obtenerLibroPorTitulo(@RequestParam String titulo)
                         throws BadRequestException;
+
+                /**
+         * Metodo para listar los libros de los autores registrados en bd.
+         *
+         * @param aniInicio Publcacion de libros.
+         * @param aniFin Publcacion de libros.
+         * @return Lista de libros de autores.
+         * @throws BadRequestException excepcion.
+         */
+        @RequestMapping(value = "/obtener-libro-fecha", produces = { "application/json" }, consumes = { "application/json" },method = RequestMethod.GET)
+        ResponseEntity<List<Libro>> obtenerLibrosPorRangoDeAnios(@RequestParam int fechaInicio, @RequestParam String fechaFin) throws BadRequestException;
+
 }
