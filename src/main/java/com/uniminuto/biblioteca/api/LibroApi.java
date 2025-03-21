@@ -66,15 +66,17 @@ public interface LibroApi {
         ResponseEntity<Optional<Libro>> obtenerLibroPorTitulo(@RequestParam String titulo)
                         throws BadRequestException;
 
-                /**
+        /**
          * Metodo para listar los libros de los autores registrados en bd.
          *
          * @param aniInicio Publcacion de libros.
-         * @param aniFin Publcacion de libros.
+         * @param aniFin    Publcacion de libros.
          * @return Lista de libros de autores.
          * @throws BadRequestException excepcion.
          */
-        @RequestMapping(value = "/obtener-libro-fecha", produces = { "application/json" }, consumes = { "application/json" },method = RequestMethod.GET)
-        ResponseEntity<List<Libro>> obtenerLibrosPorRangoDeAnios(@RequestParam int fechaInicio, @RequestParam String fechaFin) throws BadRequestException;
+        @RequestMapping(value = "/obtener-libro-fecha", produces = { "application/json" }, consumes = {
+                        "application/json" }, method = RequestMethod.GET)
+        ResponseEntity<List<Libro>> obtenerLibroPorRangoDeAnios(@RequestParam int fechaInicio,
+                        @RequestParam int fechaFin) throws BadRequestException;
 
 }

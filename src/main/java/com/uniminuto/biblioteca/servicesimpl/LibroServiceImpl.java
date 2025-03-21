@@ -62,9 +62,9 @@ public class LibroServiceImpl implements LibroService {
 
     return libro;
   }
-  @Override
-  public List<Libro> obtenerLibrosPorRangoDeAnios(int anioInicio, int anioFin){
-        return libroRepository.findByAnioPublicacionBetween(anioInicio, anioFin);
-    }
-}
 
+  @Override
+  public List<Libro> listarLibrosPorFecha(int anioInicio, int anioFin) {
+    return libroRepository.findByAnioPublicacionBetween(anioInicio, anioFin);
+  }
+}
