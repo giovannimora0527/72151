@@ -15,10 +15,10 @@ import org.springframework.http.ResponseEntity;
  */
 @RestController
 public class LibroApiController implements LibroApi {
-    
+
     @Autowired
     private LibroService libroService;
-    
+
     @Override
     public ResponseEntity<List<Libro>> listarLibros()
             throws BadRequestException {
@@ -26,9 +26,11 @@ public class LibroApiController implements LibroApi {
     }
 
     @Override
-    public ResponseEntity<Libro> obtenerLibroPorId(Integer libroId) throws BadRequestException {
-      return ResponseEntity.ok(this.libroService.obtenerLibroId(libroId));
+    public ResponseEntity<Libro> obtenerLibroPorId(Integer libroId)
+            throws BadRequestException {
+        return ResponseEntity.ok(this.libroService.obtenerLibroId(libroId));
     }
+<<<<<<< HEAD
     
     @Override
     public ResponseEntity<List<Libro>> obtenerLibroPorIdAutor(Integer autor) throws BadRequestException {
@@ -46,3 +48,27 @@ public class LibroApiController implements LibroApi {
     }
     
 }
+=======
+
+    @Override
+    public ResponseEntity<List<Libro>>
+            obtenerLibroPorAutor(Integer autorId) throws BadRequestException {
+        return ResponseEntity.ok(this.libroService.obtenerLibrosPorAutor(autorId));
+    }
+
+    @Override
+    public ResponseEntity<Libro> obtenerLibroPorNombre(String nombreLibro)
+            throws BadRequestException {
+        return ResponseEntity.ok(this.libroService.obtenerLibroPorNombre(nombreLibro));
+    }
+
+    @Override
+    public ResponseEntity<List<Libro>> obtenerLibroPorFechaPublicacion(
+            Integer anioIni, Integer anioFin)
+            throws BadRequestException {
+        return ResponseEntity.ok(this.libroService
+                .obtenerLibroXRangoPublicacion(anioIni, anioFin));
+    }
+
+}
+>>>>>>> db945afcaf24de6d8d8b2c3cf58500c5f3e028e7
