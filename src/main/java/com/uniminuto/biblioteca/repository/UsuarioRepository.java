@@ -18,4 +18,6 @@ public interface UsuarioRepository extends
      */
     Optional<Usuario> findByCorreo(String correo);
     
+    Optional<Usuario> findByNombre(String nombre);
+    
 }
