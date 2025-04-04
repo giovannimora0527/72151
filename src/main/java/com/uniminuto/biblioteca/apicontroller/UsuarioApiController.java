@@ -2,6 +2,8 @@ package com.uniminuto.biblioteca.apicontroller;
 
 import com.uniminuto.biblioteca.api.UsuarioApi;
 import com.uniminuto.biblioteca.entity.Usuario;
+import com.uniminuto.biblioteca.model.UsuarioRq;
+import com.uniminuto.biblioteca.model.UsuarioRs;
 import com.uniminuto.biblioteca.services.UsuarioService;
 import java.util.List;
 import org.apache.coyote.BadRequestException;
@@ -30,6 +32,16 @@ public class UsuarioApiController implements UsuarioApi {
     @Override
     public ResponseEntity<Usuario> buscarUsuarioPorEmail(String correo) throws BadRequestException {
        return ResponseEntity.ok(this.usuarioService.buscarPorCorreo(correo));
+    }
+
+    @Override
+    public ResponseEntity<UsuarioRs> guardarUsuario(UsuarioRq usuario) throws BadRequestException {
+        return ResponseEntity.ok(this.usuarioService.guardarUsuario(usuario));
+    }
+
+    @Override
+    public ResponseEntity<UsuarioRs> actualizarUsuario(UsuarioRq usuario) throws BadRequestException {
+        return ResponseEntity.ok(this.usuarioService.actualizarUsuario(usuario));
     }
     
 }
