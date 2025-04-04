@@ -44,5 +44,13 @@ public interface UsuarioApi {
     ResponseEntity<Usuario> buscarUsuarioPorEmail(
             @RequestParam String correo)
             throws BadRequestException;
+    
+    @RequestMapping(value = "/guardar-usuario",
+            produces = {"application/json"},
+            consumes = {"application/json"},
+            method = RequestMethod.POST)
+    ResponseEntity<Usuario> guardarUsuario(
+            @RequestParam String correo)
+            throws BadRequestException;
 
 }
