@@ -3,6 +3,7 @@ package com.uniminuto.biblioteca.repository;
 import com.uniminuto.biblioteca.entity.Autor;
 import com.uniminuto.biblioteca.entity.Libro;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -36,4 +37,12 @@ public interface LibroRepository extends
      */
     List<Libro> findByAnioPublicacionBetween(Integer anioIni, Integer anioFin);
     
+    /**
+    * Busca un libro por su título y autor.
+    * @param titulo Título del libro a buscar.
+    * @param autor Autor del libro.
+    * @return Optional de libro si existe.
+    */
+    Optional<Libro> findByTituloAndAutor(String titulo, Autor autor);
+
 }
