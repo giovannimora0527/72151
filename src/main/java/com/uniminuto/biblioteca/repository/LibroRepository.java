@@ -5,9 +5,6 @@ import com.uniminuto.biblioteca.entity.Libro;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import org.springframework.data.repository.query.Param;
-import org.springframework.data.jpa.repository.Query;
-import java.util.List;
 
 /**
  *
@@ -16,17 +13,7 @@ import java.util.List;
 @Repository
 public interface LibroRepository extends
         JpaRepository<Libro, Integer> {
-    List<Libro> findByAutor_AutorId(Integer autor);
     
-<<<<<<< HEAD
-    // Método para buscar un libro por nombre (coincidencia de subcadena, case sensitive)
-    @Query(value = "SELECT * FROM libros WHERE BINARY titulo LIKE CONCAT('%', :titulo, '%')", nativeQuery = true)
-    Libro obtenerLibroPorNombre(@Param("titulo") String titulo);
-    
-    // Método para listar libros cuyo anio_publicacion esté entre fechaInicio y fechaFin (inclusive)
-    List<Libro> findByAnioPublicacionBetween(Integer anioPublicacionInicio, Integer anioPublicacionFin);
-}
-=======
     /**
      * Obtiene la lista dado un autor.
      * @param autor Autor a buscar.
@@ -50,4 +37,3 @@ public interface LibroRepository extends
     List<Libro> findByAnioPublicacionBetween(Integer anioIni, Integer anioFin);
     
 }
->>>>>>> db945afcaf24de6d8d8b2c3cf58500c5f3e028e7

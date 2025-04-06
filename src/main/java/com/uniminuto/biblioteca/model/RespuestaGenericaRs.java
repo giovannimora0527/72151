@@ -7,7 +7,6 @@ import lombok.Data;
  * @author lmora
  */
 @Data
-public class TestRs {
-    private Integer status;
+public class RespuestaGenericaRs {
     private String message;
 }

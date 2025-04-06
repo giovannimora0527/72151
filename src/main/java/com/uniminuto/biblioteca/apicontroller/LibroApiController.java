@@ -30,25 +30,6 @@ public class LibroApiController implements LibroApi {
             throws BadRequestException {
         return ResponseEntity.ok(this.libroService.obtenerLibroId(libroId));
     }
-<<<<<<< HEAD
-    
-    @Override
-    public ResponseEntity<List<Libro>> obtenerLibroPorIdAutor(Integer autor) throws BadRequestException {
-      return ResponseEntity.ok(this.libroService.obtenerLibroPorIdAutor(autor));
-    }
-    
-    @Override
-    public ResponseEntity<Libro> obtenerLibroPorNombre(String titulo) throws BadRequestException {
-      return ResponseEntity.ok(this.libroService.obtenerLibroPorNombre(titulo));
-    }
-    
-    @Override
-    public ResponseEntity<List<Libro>> obtenerLibroPorFechaPublicacion(Integer anioPublicacionInicio, Integer anioPublicacionFin) throws BadRequestException {
-        return ResponseEntity.ok(libroService.obtenerLibroPorFechaPublicacion(anioPublicacionInicio, anioPublicacionFin));
-    }
-    
-}
-=======
 
     @Override
     public ResponseEntity<List<Libro>>
@@ -71,4 +52,3 @@ public class LibroApiController implements LibroApi {
     }
 
 }
->>>>>>> db945afcaf24de6d8d8b2c3cf58500c5f3e028e7

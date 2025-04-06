@@ -10,7 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import lombok.Data;
 
-/** 
+/**
  *
  * @author lmora
  */

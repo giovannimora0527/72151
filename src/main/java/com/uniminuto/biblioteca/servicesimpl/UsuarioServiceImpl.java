@@ -1,22 +1,7 @@
 package com.uniminuto.biblioteca.servicesimpl;
 
 import com.uniminuto.biblioteca.entity.Usuario;
-<<<<<<< HEAD
-import com.uniminuto.biblioteca.repository.UsuarioRepository;
-import com.uniminuto.biblioteca.services.UsuarioService;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
-import org.apache.coyote.BadRequestException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-/** 
- *
- * @author 853345_MiguelRayo
-=======
+import com.uniminuto.biblioteca.model.RespuestaGenericaRs;
 import com.uniminuto.biblioteca.model.UsuarioRq;
 import com.uniminuto.biblioteca.model.UsuarioRs;
 import com.uniminuto.biblioteca.repository.UsuarioRepository;
@@ -32,56 +17,10 @@ import org.springframework.stereotype.Service;
 /**
  *
  * @author lmora
->>>>>>> db945afcaf24de6d8d8b2c3cf58500c5f3e028e7
  */
 @Service
 public class UsuarioServiceImpl implements UsuarioService {
 
-<<<<<<< HEAD
-    @Autowired
-    private UsuarioRepository usuarioRepository;
-    
-    // Expresión regular para validar un correo electrónico básico
-    private static final String EMAIL_REGEX = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
-    private static final Pattern EMAIL_PATTERN = Pattern.compile(EMAIL_REGEX);
-
-    @Override
-    public List<Usuario> obtenerListadoUsuarios()
-            throws BadRequestException {
-        
-        List<Usuario> usuarios = usuarioRepository.findAll();
-        
-        if (usuarios.isEmpty()){
-            throw new BadRequestException("No se encontraron usuarios registrados");
-        }
-        
-        return usuarios;
-    }
-    
-    @Override
-    public List<Usuario> obtenerListadoUsuarioPorCorreo(String correo)
-            throws BadRequestException {
-        this.usuarioRepository.findByCorreo(correo).forEach(elem -> {
-            System.out.println("Nombre Usuario => " + elem.getNombre());
-        });
-        
-        // Validación de formato de correo
-        if (correo == null || correo.isEmpty()) {
-            throw new BadRequestException("El correo no puede estar vacío.");
-        }
-        Matcher matcher = EMAIL_PATTERN.matcher(correo);
-        if (!matcher.matches()) {
-            throw new BadRequestException("Formato de correo inválido.");
-        }
-        
-        List<Usuario> listaUsuarios = this.usuarioRepository.findByCorreo(correo);
-        
-        if (listaUsuarios.isEmpty()) {
-            throw new BadRequestException("No existen usuarios con ese correo.");
-        }
-        
-        return listaUsuarios;
-=======
     /**
      * Patron para validar email.
      */
@@ -125,9 +64,9 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     /**
-     * 
+     *
      * @param correo
-     * @return 
+     * @return
      */
     public boolean validarCorreo(String correo) {
         if (correo == null || correo.isBlank()) {
@@ -142,20 +81,20 @@ public class UsuarioServiceImpl implements UsuarioService {
         if (optUser.isPresent()) {
             throw new BadRequestException("El usuario ya se encuentra registrado. Intente de nuevo.");
         }
-        
+
         optUser = this.usuarioRepository.findByCorreo(usuario.getCorreo());
         if (optUser.isPresent()) {
             throw new BadRequestException("El correo del usuario ya se encuentra registrado. Intente de nuevo.");
         }
-        
+
         Usuario userToSave = this.transformarUsuarioRqToUsuario(usuario);
         this.usuarioRepository.save(userToSave);
-        
+
         UsuarioRs rta = new UsuarioRs();
         rta.setMessage("El usuario se ha creado satisfactoriamente.");
         return rta;
     }
-    
+
     private Usuario transformarUsuarioRqToUsuario(UsuarioRq usuario) {
         Usuario user = new Usuario();
         user.setActivo(true);
@@ -167,9 +106,46 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
-    public UsuarioRs actualizarUsuario(UsuarioRq usuario) throws BadRequestException {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
->>>>>>> db945afcaf24de6d8d8b2c3cf58500c5f3e028e7
+    public RespuestaGenericaRs actualizarUsuario(Usuario usuario) throws BadRequestException {
+        Optional<Usuario> optUser = this.usuarioRepository
+                .findById(usuario.getIdUsuario());
+        if (!optUser.isPresent()) {
+            throw new BadRequestException("No existe el usuario.");
+        }
+
+        Usuario userActual = optUser.get();
+        RespuestaGenericaRs rta = new RespuestaGenericaRs();
+        rta.setMessage("Se ha actualizado el registro satisfactoriamente");
+        if (!compararObjetosUsuarioActualizar(userActual, usuario)) {
+            return rta;
+        }
+
+        if (!userActual.getNombre().equals(usuario.getNombre())) {
+            // El nombre cambio
+            if (this.usuarioRepository.existsByNombre(usuario.getNombre())) {
+                throw new BadRequestException("El usuario " + usuario.getNombre() + ", existe en la bd. por favor verifique.");
+            }
+        }
+
+        if (!userActual.getCorreo().equals(usuario.getCorreo())) {
+            // El correo cambio
+            if (this.usuarioRepository.existsByCorreo(usuario.getCorreo())) {
+                throw new BadRequestException("El correo" + usuario.getCorreo() + ", existe en la bd. por favor verifique.");
+            }
+        }
+
+        userActual.setNombre(usuario.getNombre());
+        userActual.setCorreo(usuario.getCorreo());
+        userActual.setTelefono(usuario.getTelefono());
+        userActual.setActivo(usuario.getActivo());
+        this.usuarioRepository.save(userActual);
+        return rta;
     }
 
+    private boolean compararObjetosUsuarioActualizar(Usuario usuarioActual, Usuario usuarioFront) {
+        return !usuarioActual.getNombre().equals(usuarioFront.getNombre())
+                || !usuarioActual.getCorreo().equals(usuarioFront.getCorreo())
+                || !usuarioActual.getTelefono().equals(usuarioFront.getTelefono())
+                || !usuarioActual.getActivo().equals(usuarioFront.getActivo());
+    }
 }

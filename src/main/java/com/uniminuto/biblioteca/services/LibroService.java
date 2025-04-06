@@ -25,15 +25,6 @@ public interface LibroService {
      */
     Libro obtenerLibroId(Integer libroId) throws BadRequestException;
     
-<<<<<<< HEAD
-    List<Libro> obtenerLibroPorIdAutor(Integer autor) throws BadRequestException;
-    
-    // Método para buscar libro por nombre
-    Libro obtenerLibroPorNombre(String titulo) throws BadRequestException;
-    
-    List<Libro> obtenerLibroPorFechaPublicacion(Integer anioPublicacionInicio, Integer anioPublicacionFin) throws BadRequestException;
-    
-=======
     /**
      * Obtiene los libros registrados dado un autor.
      * @param autorId Id del autor.
@@ -60,5 +51,4 @@ public interface LibroService {
      */
     List<Libro> obtenerLibroXRangoPublicacion(Integer anioIni, 
             Integer anioFin) throws BadRequestException;
->>>>>>> db945afcaf24de6d8d8b2c3cf58500c5f3e028e7
 }
