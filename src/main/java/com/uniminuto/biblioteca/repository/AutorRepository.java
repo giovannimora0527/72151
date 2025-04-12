@@ -3,6 +3,8 @@ package com.uniminuto.biblioteca.repository;
 import com.uniminuto.biblioteca.entity.Autor;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -13,10 +15,15 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface AutorRepository extends
         JpaRepository<Autor, Integer>  {
-    List<Autor> findByFechaNacimientoBetween(LocalDate fechaNacimientoInicial,
-            LocalDate fechaNacimientoFin);
-    
-    List<Autor> findByNacionalidad(String nacionalidad);
+
+
+    Boolean existsByNombre(String nombre);
+
+    Boolean existsByNacionalidad(String nacionalidad);
+
+    Optional<Autor> findByNacionalidad(String nacionalidad);
+
+    Optional<Autor> findByFechaNacimiento(LocalDate fechaNacimiento);
     
     List<Autor> findAllByOrderByFechaNacimientoAsc();
     
