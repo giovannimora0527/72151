@@ -1,6 +1,8 @@
 package com.uniminuto.biblioteca.services;
 
 import com.uniminuto.biblioteca.entity.Libro;
+import com.uniminuto.biblioteca.model.LibroRq;
+import com.uniminuto.biblioteca.model.RespuestaGenericaRs;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -63,5 +65,17 @@ public interface LibroService {
      */
     List<Libro> obtenerLibroXRangoPublicacion(Integer anioIni, 
             Integer anioFin) throws BadRequestException;
+<<<<<<< HEAD
 >>>>>>> 7d718bb03f5b91b34a27e06cc30dda87d7342579
 }
+=======
+    
+    /**
+     * 
+     * @param LibroRq
+     * @return
+     * @throws BadRequestException 
+     */
+    RespuestaGenericaRs crearLibro(LibroRq LibroRq) throws BadRequestException;
+}
+>>>>>>> desarrollo

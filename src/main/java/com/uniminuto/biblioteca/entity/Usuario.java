@@ -100,5 +100,9 @@ public class Usuario implements Serializable {
      */
     @Column(name = "activo")
     private Boolean activo;
+<<<<<<< HEAD
 >>>>>>> 7d718bb03f5b91b34a27e06cc30dda87d7342579
 }
+=======
+}
+>>>>>>> desarrollo

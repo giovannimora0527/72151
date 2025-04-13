@@ -45,6 +45,7 @@ public class Libro implements Serializable {
      * Año de publicación.
      */
     @Column(name = "anio_publicacion")
+<<<<<<< HEAD
     private Integer aniopublicacion;
     
         /**
@@ -58,5 +59,16 @@ public class Libro implements Serializable {
      * cantidad de libros.
      */
     @Column(name = "existencias")
+=======
+    private Integer anioPublicacion;
+
+    /** Categoría a la que pertenece el libro. */
+    @ManyToOne
+    @JoinColumn(name = "categoria_id", nullable = false)
+    private Categoria categoria;
+
+    /** Cantidad de ejemplares disponibles del libro. */
+    @Column(name = "existencias", nullable = false)
+>>>>>>> desarrollo
     private Integer existencias;
 }

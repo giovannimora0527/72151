@@ -1,14 +1,20 @@
 package com.uniminuto.biblioteca.servicesimpl;
 
 import com.uniminuto.biblioteca.entity.Autor;
+import com.uniminuto.biblioteca.entity.Categoria;
 import com.uniminuto.biblioteca.entity.Libro;
+<<<<<<< HEAD
 <<<<<<< HEAD
 import com.uniminuto.biblioteca.repository.AutorRepository;
 =======
+=======
+import com.uniminuto.biblioteca.model.LibroRq;
+import com.uniminuto.biblioteca.model.RespuestaGenericaRs;
+import com.uniminuto.biblioteca.repository.CategoriaRepository;
+>>>>>>> desarrollo
 import com.uniminuto.biblioteca.repository.LibroRepository;
 import com.uniminuto.biblioteca.services.AutorService;
 import com.uniminuto.biblioteca.services.LibroService;
-import java.time.LocalDateTime;
 import java.util.Collections;
 >>>>>>> 7d718bb03f5b91b34a27e06cc30dda87d7342579
 import java.util.List;
@@ -45,6 +51,9 @@ public class LibroServiceImpl implements LibroService {
 
     @Autowired
     private AutorService autorService;
+    
+    @Autowired
+    private CategoriaRepository categoriaRepository;
 
     @Override
 <<<<<<< HEAD
@@ -137,6 +146,7 @@ public class LibroServiceImpl implements LibroService {
         return this.libroRepository.findByAnioPublicacionBetween(fechaInicio, fechaFin);
 >>>>>>> 7d718bb03f5b91b34a27e06cc30dda87d7342579
     }
+<<<<<<< HEAD
     
     // se verifica que los años no sean nulos && que inicioAnio >= a finAnio, si no son valida lanza la exepción
     @Override
@@ -149,4 +159,40 @@ public class LibroServiceImpl implements LibroService {
         }
     }
     
+=======
+
+    @Override
+    public RespuestaGenericaRs crearLibro(LibroRq libroRq) throws BadRequestException {
+       // Paso 1. - en la bd si el libro existe por nombre
+       // Paso 2. SI ESTA => lanzo el error
+       // Paso 3. SINO esta Convertir mi objeto entrada rq a entidad Libro
+       // Paso 4. Guardo el registro
+       // Paso 5. Devolver una respuesta
+       if (this.libroRepository.existsByTitulo(libroRq.getTitulo())) {
+           throw new BadRequestException("El libro se encuentra ya registrado");
+       }
+       
+       Libro libroGuardar = this.convertirLibroRqToLibro(libroRq);
+       this.libroRepository.save(libroGuardar);
+       RespuestaGenericaRs rta = new RespuestaGenericaRs();
+       rta.setMessage("Se ha guardado el libro satisfactoriamente");
+       return rta;
+    }
+    
+    private Libro convertirLibroRqToLibro(LibroRq libroRq) throws BadRequestException {
+        Libro libro = new Libro();
+        libro.setAnioPublicacion(libroRq.getAnioPublicacion());
+        Autor autor = this.autorService.obtenerAutorPorId(libroRq.getAutorId());
+        Optional<Categoria> optCat = this.categoriaRepository.findById(libroRq.getCategoriaId());
+        if (!optCat.isPresent()) {
+            throw new BadRequestException("No existe la categoria");
+        }
+        Categoria categoria = optCat.get();
+        libro.setAutor(autor);
+        libro.setCategoria(categoria);
+        libro.setTitulo(libroRq.getTitulo());
+        libro.setExistencias(libroRq.getExistencias());
+        return libro;
+    }
+>>>>>>> desarrollo
 }

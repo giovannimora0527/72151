@@ -39,5 +39,9 @@ public interface UsuarioRepository extends
 
     boolean existsByCorreo(String correo);
 
+<<<<<<< HEAD
 }
 >>>>>>> 7d718bb03f5b91b34a27e06cc30dda87d7342579
+=======
+}
+>>>>>>> desarrollo

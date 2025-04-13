@@ -190,5 +190,9 @@ public class UsuarioServiceImpl implements UsuarioService {
                 || !usuarioActual.getTelefono().equals(usuarioFront.getTelefono())
                 || !usuarioActual.getActivo().equals(usuarioFront.getActivo());
     }
+<<<<<<< HEAD
 }
 >>>>>>> 7d718bb03f5b91b34a27e06cc30dda87d7342579
+=======
+}
+>>>>>>> desarrollo

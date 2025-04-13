@@ -51,6 +51,7 @@ public interface LibroRepository extends
      */
     List<Libro> findByAnioPublicacionBetween(Integer anioIni, Integer anioFin);
     
+<<<<<<< HEAD
 >>>>>>> 7d718bb03f5b91b34a27e06cc30dda87d7342579
 }
 
@@ -61,3 +62,11 @@ findById(Integer id).
 deleteById(Integer id).
 findAll().
 **/
+=======
+    /**
+     * Consulta el libro por titulo.
+     */
+    boolean existsByTitulo(String titulo);
+    
+}
+>>>>>>> desarrollo
