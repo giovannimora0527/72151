@@ -1,9 +1,11 @@
 package com.uniminuto.biblioteca.servicesimpl;
 
 import com.uniminuto.biblioteca.entity.Autor;
+import com.uniminuto.biblioteca.entity.Categoria;
 import com.uniminuto.biblioteca.entity.Libro;
 import com.uniminuto.biblioteca.model.LibroRq;
-import com.uniminuto.biblioteca.model.LibroRs;
+import com.uniminuto.biblioteca.model.RespuestaGenericaRs;
+import com.uniminuto.biblioteca.repository.CategoriaRepository;
 import com.uniminuto.biblioteca.repository.LibroRepository;
 import com.uniminuto.biblioteca.services.AutorService;
 import com.uniminuto.biblioteca.services.LibroService;
@@ -26,6 +28,9 @@ public class LibroServiceImpl implements LibroService {
 
     @Autowired
     private AutorService autorService;
+    
+    @Autowired
+    private CategoriaRepository categoriaRepository;
 
     @Override
     public List<Libro> listarLibros() throws BadRequestException {
@@ -36,15 +41,17 @@ public class LibroServiceImpl implements LibroService {
     public Libro obtenerLibroId(Integer libroId) throws BadRequestException {
         Optional<Libro> optLibro = this.libroRepository.findById(libroId);
         if (!optLibro.isPresent()) {
-            throw new BadRequestException("No se encuentra el libro con el id = " + libroId);
+            throw new BadRequestException("No se encuentra el libro con el id = "
+                    + libroId);
         }
         return optLibro.get();
     }
 
     @Override
-    public List<Libro> obtenerLibrosPorAutor(Integer autorId) throws BadRequestException {
+    public List<Libro> obtenerLibrosPorAutor(Integer autorId)
+            throws BadRequestException {
         if (autorId == null) {
-            throw new BadRequestException("El id del autor no puede ser vacío.");
+            throw new BadRequestException("El id del autor no puede ser vacio.");
         }
         Autor autor = this.autorService.obtenerAutorPorId(autorId);
         if (autor == null) {
@@ -61,13 +68,15 @@ public class LibroServiceImpl implements LibroService {
         }
         Libro libro = this.libroRepository.findByTitulo(nombreLibro);
         if (libro == null) {
-            throw new BadRequestException("No existe el libro con el nombre de " + nombreLibro + ".");
+            throw new BadRequestException("No existe el libro con el nombre de "
+                    + nombreLibro + ".");
         }
         return libro;
     }
 
     @Override
-    public List<Libro> obtenerLibroXRangoPublicacion(Integer fechaInicio, Integer fechaFin)
+    public List<Libro> obtenerLibroXRangoPublicacion(
+            Integer fechaInicio, Integer fechaFin)
             throws BadRequestException {
         if (fechaInicio == null) {
             throw new BadRequestException("La fecha de inicio es obligatoria.");
@@ -82,34 +91,38 @@ public class LibroServiceImpl implements LibroService {
 
         return this.libroRepository.findByAnioPublicacionBetween(fechaInicio, fechaFin);
     }
-    
-    @Override
-    public LibroRs guardarLibro(LibroRq libro) throws BadRequestException {
-        // Verificamos si ya existe un libro con la misma combinación de título y autor
-        Optional<Libro> optLibro = this.libroRepository.findByTituloAndAutor(libro.getTitulo(), libro.getAutor());
-        if (optLibro.isPresent()) {
-            throw new BadRequestException("El libro ya se encuentra registrado para este autor. Intente de nuevo.");
-        }
-        
-        Libro libroToSave = this.transformarLibroRqToLibro(libro);
-        this.libroRepository.save(libroToSave);
-        
-        LibroRs rta = new LibroRs();
-        rta.setMessage("El libro se ha creado satisfactoriamente.");
-        return rta;
-    }
-    
-    private Libro transformarLibroRqToLibro(LibroRq libro) {
-        Libro book = new Libro();
-        book.setActivo(true);
-        book.setAutor(libro.getAutor());
-        book.setTitulo(libro.getTitulo());
-        book.setCategoria(libro.getCategoria());
-        return book;
-    }
 
     @Override
-    public LibroRs actualizarLibro(LibroRq libro) throws BadRequestException {
-        throw new UnsupportedOperationException("Not supported yet."); // Método pendiente de implementación
+    public RespuestaGenericaRs crearLibro(LibroRq libroRq) throws BadRequestException {
+       // Paso 1. - en la bd si el libro existe por nombre
+       // Paso 2. SI ESTA => lanzo el error
+       // Paso 3. SINO esta Convertir mi objeto entrada rq a entidad Libro
+       // Paso 4. Guardo el registro
+       // Paso 5. Devolver una respuesta
+       if (this.libroRepository.existsByTitulo(libroRq.getTitulo())) {
+           throw new BadRequestException("El libro se encuentra ya registrado");
+       }
+       
+       Libro libroGuardar = this.convertirLibroRqToLibro(libroRq);
+       this.libroRepository.save(libroGuardar);
+       RespuestaGenericaRs rta = new RespuestaGenericaRs();
+       rta.setMessage("Se ha guardado el libro satisfactoriamente");
+       return rta;
+    }
+    
+    private Libro convertirLibroRqToLibro(LibroRq libroRq) throws BadRequestException {
+        Libro libro = new Libro();
+        libro.setAnioPublicacion(libroRq.getAnioPublicacion());
+        Autor autor = this.autorService.obtenerAutorPorId(libroRq.getAutorId());
+        Optional<Categoria> optCat = this.categoriaRepository.findById(libroRq.getCategoriaId());
+        if (!optCat.isPresent()) {
+            throw new BadRequestException("No existe la categoria");
+        }
+        Categoria categoria = optCat.get();
+        libro.setAutor(autor);
+        libro.setCategoria(categoria);
+        libro.setTitulo(libroRq.getTitulo());
+        libro.setExistencias(libroRq.getExistencias());
+        return libro;
     }
 }

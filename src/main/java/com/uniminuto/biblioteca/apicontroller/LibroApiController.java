@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.web.bind.annotation.RestController;
 import com.uniminuto.biblioteca.entity.Libro;
 import com.uniminuto.biblioteca.model.LibroRq;
-import com.uniminuto.biblioteca.model.LibroRs;
+import com.uniminuto.biblioteca.model.RespuestaGenericaRs;
 import com.uniminuto.biblioteca.services.LibroService;
 import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,15 +52,10 @@ public class LibroApiController implements LibroApi {
         return ResponseEntity.ok(this.libroService
                 .obtenerLibroXRangoPublicacion(anioIni, anioFin));
     }
-    
-    @Override
-    public ResponseEntity<LibroRs> guardarLibro(LibroRq libro) throws BadRequestException {
-        return ResponseEntity.ok(this.libroService.guardarLibro(libro));
-    }
 
     @Override
-    public ResponseEntity<LibroRs> actualizarLibro(LibroRq libro) throws BadRequestException {
-        return ResponseEntity.ok(this.libroService.actualizarLibro(libro));
+    public ResponseEntity<RespuestaGenericaRs> crearLibro(LibroRq LibroRq) throws BadRequestException {
+        return ResponseEntity.ok(this.libroService.crearLibro(LibroRq));
     }
-    
+
 }

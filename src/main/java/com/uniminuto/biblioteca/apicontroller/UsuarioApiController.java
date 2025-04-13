@@ -2,6 +2,7 @@ package com.uniminuto.biblioteca.apicontroller;
 
 import com.uniminuto.biblioteca.api.UsuarioApi;
 import com.uniminuto.biblioteca.entity.Usuario;
+import com.uniminuto.biblioteca.model.RespuestaGenericaRs;
 import com.uniminuto.biblioteca.model.UsuarioRq;
 import com.uniminuto.biblioteca.model.UsuarioRs;
 import com.uniminuto.biblioteca.services.UsuarioService;
@@ -40,7 +41,7 @@ public class UsuarioApiController implements UsuarioApi {
     }
 
     @Override
-    public ResponseEntity<UsuarioRs> actualizarUsuario(UsuarioRq usuario) throws BadRequestException {
+    public ResponseEntity<RespuestaGenericaRs> actualizarUsuario(Usuario usuario) throws BadRequestException {
         return ResponseEntity.ok(this.usuarioService.actualizarUsuario(usuario));
     }
     

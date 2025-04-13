@@ -2,7 +2,7 @@ package com.uniminuto.biblioteca.api;
 
 import com.uniminuto.biblioteca.entity.Libro;
 import com.uniminuto.biblioteca.model.LibroRq;
-import com.uniminuto.biblioteca.model.LibroRs;
+import com.uniminuto.biblioteca.model.RespuestaGenericaRs;
 import java.util.List;
 import org.apache.coyote.BadRequestException;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  *
- * @author ewilliams
+ * @author lmora
  */
 @CrossOrigin(origins = "*")
 @RequestMapping("/libro")
@@ -92,18 +92,19 @@ public interface LibroApi {
             @RequestParam Integer anioFin)
             throws BadRequestException;
     
-    @RequestMapping(value = "/guardar-libro",
+   
+    /**
+     * Metodo para guardar un libro nuevo.
+     *
+     * @param LibroRq entrada.
+     * @return Respuesta del servicio.
+     * @throws BadRequestException excepcion.
+     */
+    @RequestMapping(value = "/crear-libro",
             produces = {"application/json"},
             consumes = {"application/json"},
             method = RequestMethod.POST)
-    ResponseEntity<LibroRs> guardarLibro(@RequestBody LibroRq libro)
+    ResponseEntity<RespuestaGenericaRs> crearLibro(@RequestBody LibroRq LibroRq)
             throws BadRequestException;
     
-    @RequestMapping(value = "/actualizar-libro",
-            produces = {"application/json"},
-            consumes = {"application/json"},
-            method = RequestMethod.POST)
-    ResponseEntity<LibroRs> actualizarLibro(@RequestBody LibroRq Libro)
-            throws BadRequestException;
-
 }

@@ -1,6 +1,7 @@
 package com.uniminuto.biblioteca.servicesimpl;
 
 import com.uniminuto.biblioteca.entity.Usuario;
+import com.uniminuto.biblioteca.model.RespuestaGenericaRs;
 import com.uniminuto.biblioteca.model.UsuarioRq;
 import com.uniminuto.biblioteca.model.UsuarioRs;
 import com.uniminuto.biblioteca.repository.UsuarioRepository;
@@ -63,9 +64,9 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     /**
-     * 
+     *
      * @param correo
-     * @return 
+     * @return
      */
     public boolean validarCorreo(String correo) {
         if (correo == null || correo.isBlank()) {
@@ -80,20 +81,20 @@ public class UsuarioServiceImpl implements UsuarioService {
         if (optUser.isPresent()) {
             throw new BadRequestException("El usuario ya se encuentra registrado. Intente de nuevo.");
         }
-        
+
         optUser = this.usuarioRepository.findByCorreo(usuario.getCorreo());
         if (optUser.isPresent()) {
             throw new BadRequestException("El correo del usuario ya se encuentra registrado. Intente de nuevo.");
         }
-        
+
         Usuario userToSave = this.transformarUsuarioRqToUsuario(usuario);
         this.usuarioRepository.save(userToSave);
-        
+
         UsuarioRs rta = new UsuarioRs();
         rta.setMessage("El usuario se ha creado satisfactoriamente.");
         return rta;
     }
-    
+
     private Usuario transformarUsuarioRqToUsuario(UsuarioRq usuario) {
         Usuario user = new Usuario();
         user.setActivo(true);
@@ -105,8 +106,46 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
-    public UsuarioRs actualizarUsuario(UsuarioRq usuario) throws BadRequestException {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public RespuestaGenericaRs actualizarUsuario(Usuario usuario) throws BadRequestException {
+        Optional<Usuario> optUser = this.usuarioRepository
+                .findById(usuario.getIdUsuario());
+        if (!optUser.isPresent()) {
+            throw new BadRequestException("No existe el usuario.");
+        }
+
+        Usuario userActual = optUser.get();
+        RespuestaGenericaRs rta = new RespuestaGenericaRs();
+        rta.setMessage("Se ha actualizado el registro satisfactoriamente");
+        if (!compararObjetosUsuarioActualizar(userActual, usuario)) {
+            return rta;
+        }
+
+        if (!userActual.getNombre().equals(usuario.getNombre())) {
+            // El nombre cambio
+            if (this.usuarioRepository.existsByNombre(usuario.getNombre())) {
+                throw new BadRequestException("El usuario " + usuario.getNombre() + ", existe en la bd. por favor verifique.");
+            }
+        }
+
+        if (!userActual.getCorreo().equals(usuario.getCorreo())) {
+            // El correo cambio
+            if (this.usuarioRepository.existsByCorreo(usuario.getCorreo())) {
+                throw new BadRequestException("El correo" + usuario.getCorreo() + ", existe en la bd. por favor verifique.");
+            }
+        }
+
+        userActual.setNombre(usuario.getNombre());
+        userActual.setCorreo(usuario.getCorreo());
+        userActual.setTelefono(usuario.getTelefono());
+        userActual.setActivo(usuario.getActivo());
+        this.usuarioRepository.save(userActual);
+        return rta;
     }
 
+    private boolean compararObjetosUsuarioActualizar(Usuario usuarioActual, Usuario usuarioFront) {
+        return !usuarioActual.getNombre().equals(usuarioFront.getNombre())
+                || !usuarioActual.getCorreo().equals(usuarioFront.getCorreo())
+                || !usuarioActual.getTelefono().equals(usuarioFront.getTelefono())
+                || !usuarioActual.getActivo().equals(usuarioFront.getActivo());
+    }
 }

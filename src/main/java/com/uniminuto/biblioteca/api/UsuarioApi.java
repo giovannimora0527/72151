@@ -1,6 +1,7 @@
 package com.uniminuto.biblioteca.api;
 
 import com.uniminuto.biblioteca.entity.Usuario;
+import com.uniminuto.biblioteca.model.RespuestaGenericaRs;
 import com.uniminuto.biblioteca.model.UsuarioRq;
 import com.uniminuto.biblioteca.model.UsuarioRs;
 import java.util.List;
@@ -59,7 +60,7 @@ public interface UsuarioApi {
             produces = {"application/json"},
             consumes = {"application/json"},
             method = RequestMethod.POST)
-    ResponseEntity<UsuarioRs> actualizarUsuario(@RequestBody UsuarioRq usuario)
+    ResponseEntity<RespuestaGenericaRs> actualizarUsuario(@RequestBody Usuario usuario)
             throws BadRequestException;
 
 }
