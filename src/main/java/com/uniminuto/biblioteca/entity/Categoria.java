@@ -15,7 +15,7 @@ import lombok.Data;
  */
 @Data
 @Entity
-@Table(name = "categoria")
+@Table(name = "categorias")
 public class Categoria implements Serializable {
 
     /**
@@ -25,7 +25,7 @@ public class Categoria implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "categoria_id")
+    @Column(name = "id_categoria")
     private Integer categoriaId;
 
     @Column(name = "nombre", nullable = false, length = 100)

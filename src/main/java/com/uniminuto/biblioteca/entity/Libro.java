@@ -43,7 +43,7 @@ public class Libro implements Serializable {
 
     /** Categoría a la que pertenece el libro. */
     @ManyToOne
-    @JoinColumn(name = "categoria_id", nullable = false)
+    @JoinColumn(name = "id_categoria", nullable = false)
     private Categoria categoria;
 
     /** Cantidad de ejemplares disponibles del libro. */
