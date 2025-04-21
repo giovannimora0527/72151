@@ -7,7 +7,7 @@ import lombok.Data;
  * @author ewdev
  */
 @Data
-public class LibroRs {
+public class AutorRs {
     private String message;
     
 public String getMessage(){

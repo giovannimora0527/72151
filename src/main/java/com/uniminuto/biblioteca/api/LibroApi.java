@@ -1,13 +1,9 @@
 package com.uniminuto.biblioteca.api;
 
-<<<<<<< HEAD
-=======
 import com.uniminuto.biblioteca.entity.Libro;
 import com.uniminuto.biblioteca.model.LibroRq;
 import com.uniminuto.biblioteca.model.RespuestaGenericaRs;
->>>>>>> desarrollo
 import java.util.List;
-import com.uniminuto.biblioteca.entity.Libro;
 import org.apache.coyote.BadRequestException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -21,29 +17,21 @@ import org.springframework.web.bind.annotation.RequestParam;
  * @author lmora
  */
 @CrossOrigin(origins = "*")
-@RequestMapping("/libros")
+@RequestMapping("/libro")
 public interface LibroApi {
+
     /**
-     * Metodo para listar los libros registrados en bd.
+     * Metodo para listar los autores registrados en bd.
      *
-<<<<<<< HEAD
-     * @return Lista de libros.
-=======
      * @return Lista de libros registrados.
->>>>>>> 7d718bb03f5b91b34a27e06cc30dda87d7342579
      * @throws BadRequestException excepcion.
      */
     @RequestMapping(value = "/listar",
             produces = {"application/json"},
             consumes = {"application/json"},
             method = RequestMethod.GET)
-    ResponseEntity<List<Libro>>listarLibros()
+    ResponseEntity<List<Libro>> listarLibros()
             throws BadRequestException;
-<<<<<<< HEAD
-    
-    
-    @RequestMapping(value = "/listar-libros-id",
-=======
 
     /**
      * Metodo para listar los autores registrados en bd.
@@ -53,38 +41,11 @@ public interface LibroApi {
      * @throws BadRequestException excepcion.
      */
     @RequestMapping(value = "/obtener-libro-id",
->>>>>>> 7d718bb03f5b91b34a27e06cc30dda87d7342579
             produces = {"application/json"},
             consumes = {"application/json"},
             method = RequestMethod.GET)
-    ResponseEntity<Libro> listarLibrosId(@RequestParam Integer id_libro)
+    ResponseEntity<Libro> obtenerLibroPorId(@RequestParam Integer libroId)
             throws BadRequestException;
-<<<<<<< HEAD
-        
-    @RequestMapping(value = "/listar-libros-autorid",
-            produces = {"application/json"},
-            consumes = {"application/json"},
-            method = RequestMethod.GET)
-    ResponseEntity <List<Libro>> listarLibrosAutorId(@RequestParam Integer id_autor)
-            throws BadRequestException;
-        
-    @RequestMapping(value = "/listar-libros-nombre",
-            produces = {"application/json"},
-            consumes = {"application/json"},
-            method = RequestMethod.GET)
-    ResponseEntity<Libro> listarLibrosNombre(@RequestParam String titulo)
-            throws BadRequestException;
-
-    //Se
-    @RequestMapping(value = "/listar-libros-fecha", //ruta endpoint
-            produces = {"application/json"},
-            consumes = {"application/json"},
-            method = RequestMethod.GET)  //usa el metodo de HTTP
-    ResponseEntity <List<Libro>> listarLibrosAnionRango(@RequestParam Integer inicioAnio, @RequestParam Integer finAnio)  
-    //devuelve una lista de objetos libros,@RequestParam pra recibir dos parametros en rango
-            throws BadRequestException;
-}
-=======
     
     /**
      * Metodo para obtener los libros dado un autor.
@@ -131,10 +92,6 @@ public interface LibroApi {
             @RequestParam Integer anioFin)
             throws BadRequestException;
     
-<<<<<<< HEAD
-}
->>>>>>> 7d718bb03f5b91b34a27e06cc30dda87d7342579
-=======
    
     /**
      * Metodo para guardar un libro nuevo.
@@ -150,5 +107,11 @@ public interface LibroApi {
     ResponseEntity<RespuestaGenericaRs> crearLibro(@RequestBody LibroRq LibroRq)
             throws BadRequestException;
     
+    @RequestMapping(value = "/actualizar-libro",
+            produces = {"application/json"},
+            consumes = {"application/json"},
+            method = RequestMethod.POST)
+    ResponseEntity<RespuestaGenericaRs> actualizarLibro(@RequestBody Libro libro)
+            throws BadRequestException;
+
 }
->>>>>>> desarrollo

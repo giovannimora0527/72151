@@ -2,26 +2,15 @@ package com.uniminuto.biblioteca.services;
 
 import com.uniminuto.biblioteca.entity.Libro;
 import com.uniminuto.biblioteca.model.LibroRq;
+import com.uniminuto.biblioteca.model.LibroRs;
 import com.uniminuto.biblioteca.model.RespuestaGenericaRs;
 import java.time.LocalDateTime;
 import java.util.List;
+import org.apache.coyote.BadRequestException;
 
 /**
  *
  * @author lmora
-<<<<<<< HEAD
- */ //Se declaran metodos que deberán ser implementados por una clase concreta
-public interface libroService {
-    List<Libro> obtenerListadoLibros(); //Devuelv una list with all libre () cuando se indica un parametro dentro de () devuelv un valor especifico.
-    
-    Libro obtenerLibrosPorId(Integer id_libro);  
-    
-    List<Libro> obtenerLibrosAutorId(Integer id_autor);
-
-    Libro obtenerLibrosNombre(String titulo); //devuelve un only value
-    
-    List<Libro> obtenerLibrosAnion(Integer inicioAnio, Integer finAnio);
-=======
  */
 public interface LibroService {
     /**
@@ -65,10 +54,6 @@ public interface LibroService {
      */
     List<Libro> obtenerLibroXRangoPublicacion(Integer anioIni, 
             Integer anioFin) throws BadRequestException;
-<<<<<<< HEAD
->>>>>>> 7d718bb03f5b91b34a27e06cc30dda87d7342579
-}
-=======
     
     /**
      * 
@@ -77,5 +62,5 @@ public interface LibroService {
      * @throws BadRequestException 
      */
     RespuestaGenericaRs crearLibro(LibroRq LibroRq) throws BadRequestException;
+    RespuestaGenericaRs actualizarLibro(Libro libro) throws BadRequestException;
 }
->>>>>>> desarrollo

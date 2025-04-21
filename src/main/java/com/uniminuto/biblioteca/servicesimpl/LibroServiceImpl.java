@@ -3,90 +3,37 @@ package com.uniminuto.biblioteca.servicesimpl;
 import com.uniminuto.biblioteca.entity.Autor;
 import com.uniminuto.biblioteca.entity.Categoria;
 import com.uniminuto.biblioteca.entity.Libro;
-<<<<<<< HEAD
-<<<<<<< HEAD
-import com.uniminuto.biblioteca.repository.AutorRepository;
-=======
-=======
 import com.uniminuto.biblioteca.model.LibroRq;
 import com.uniminuto.biblioteca.model.RespuestaGenericaRs;
 import com.uniminuto.biblioteca.repository.CategoriaRepository;
->>>>>>> desarrollo
 import com.uniminuto.biblioteca.repository.LibroRepository;
 import com.uniminuto.biblioteca.services.AutorService;
 import com.uniminuto.biblioteca.services.LibroService;
 import java.util.Collections;
->>>>>>> 7d718bb03f5b91b34a27e06cc30dda87d7342579
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.uniminuto.biblioteca.repository.LibroRepository;
-import com.uniminuto.biblioteca.services.libroService;
 
 /**
  *
  * @author lmora
-<<<<<<< HEAD
- */ // Este implemente la logica de negocio de libroservice
-@Service //service admin for spring boot
-public class LibroServiceImpl implements libroService {
-    //Inyecta depds de autor y libro para la class
-    public LibroServiceImpl(com.uniminuto.biblioteca.repository.AutorRepository AutorRepository, com.uniminuto.biblioteca.repository.LibroRepository LibroRepository) {
-        this.AutorRepository = AutorRepository;
-        this.LibroRepository = LibroRepository;
-    }
-
-    private final AutorRepository AutorRepository;
-    private final LibroRepository LibroRepository;
-    
-=======
  */
 @Service
 public class LibroServiceImpl implements LibroService {
 
->>>>>>> 7d718bb03f5b91b34a27e06cc30dda87d7342579
     @Autowired
     private LibroRepository libroRepository;
 
     @Autowired
     private AutorService autorService;
-    
+
     @Autowired
     private CategoriaRepository categoriaRepository;
 
     @Override
-<<<<<<< HEAD
-    public List<Libro> obtenerListadoLibros() {
-        return this.libroRepository.findAll(); // obtiene todo los libros de la bd
-    }    
-
-    @Override
-    public Libro obtenerLibrosPorId(Integer id_libro) {
-    Optional<Libro> libro = this.libroRepository.findById(id_libro); // por medio del optional si el libro existe retorna un .get(), si no lanza una exepción runTimeException
-     if (libro.isPresent()) {
-        return libro.get();
-    } else {
-        throw new RuntimeException("ID del libro no encontrado");
-    } 
-}
-    
-    @Override
-    public List<Libro> obtenerLibrosAutorId(Integer id_autor) {
-     if (!AutorRepository.existsById(id_autor)) { throw new RuntimeException("Verifique el ID. Autor no registrado");} //verifica que autor exist en la base de datos, Asi con logic inversa para no continuar con action
-        List <Libro> libros = libroRepository.findByIdAutor(id_autor); //si exist busca los libros con el findByID...
-        return libros;
-    }
-
-    @Override
-    public Libro obtenerLibrosNombre(String titulo) {
-    Optional<Libro> libro = this.libroRepository.findByTitulo(titulo);
-     if (libro.isPresent()) {
-        return libro.get();
-    } else {
-        throw new RuntimeException("El nombre del libro no existe, verifique la ortografía");
-    } 
-=======
     public List<Libro> listarLibros() throws BadRequestException {
         return this.libroRepository.findAll();
     }
@@ -144,48 +91,36 @@ public class LibroServiceImpl implements LibroService {
         }
 
         return this.libroRepository.findByAnioPublicacionBetween(fechaInicio, fechaFin);
->>>>>>> 7d718bb03f5b91b34a27e06cc30dda87d7342579
     }
-<<<<<<< HEAD
-    
-    // se verifica que los años no sean nulos && que inicioAnio >= a finAnio, si no son valida lanza la exepción
-    @Override
-    public List<Libro> obtenerLibrosAnion(Integer inicioAnio, Integer finAnio) {
-       if (inicioAnio == null || finAnio == null || inicioAnio > finAnio) { throw new RuntimeException("El rango de años no es válido"); }else {
-    List<Libro> libros = libroRepository.findByaniopublicacionBetween(inicioAnio, finAnio); //busca los libros en el rango de anio, si no hay, lanza una exepción
-        if (libros.isEmpty()){
-            throw new RuntimeException("No se encontraron libros en el rango de años especificado");}
-        return libros;
-        }
-    }
-    
-=======
 
     @Override
     public RespuestaGenericaRs crearLibro(LibroRq libroRq) throws BadRequestException {
-       // Paso 1. - en la bd si el libro existe por nombre
-       // Paso 2. SI ESTA => lanzo el error
-       // Paso 3. SINO esta Convertir mi objeto entrada rq a entidad Libro
-       // Paso 4. Guardo el registro
-       // Paso 5. Devolver una respuesta
-       if (this.libroRepository.existsByTitulo(libroRq.getTitulo())) {
-           throw new BadRequestException("El libro se encuentra ya registrado");
-       }
-       
-       Libro libroGuardar = this.convertirLibroRqToLibro(libroRq);
-       this.libroRepository.save(libroGuardar);
-       RespuestaGenericaRs rta = new RespuestaGenericaRs();
-       rta.setMessage("Se ha guardado el libro satisfactoriamente");
-       return rta;
+        // Paso 1. - en la bd si el libro existe por nombre
+        // Paso 2. SI ESTA => lanzo el error
+        // Paso 3. SINO esta Convertir mi objeto entrada rq a entidad Libro
+        // Paso 4. Guardo el registro
+        // Paso 5. Devolver una respuesta
+        if (this.libroRepository.existsByTitulo(libroRq.getTitulo())) {
+            throw new BadRequestException("El libro se encuentra ya registrado");
+        }
+
+        Libro libroGuardar = this.convertirLibroRqToLibro(libroRq);
+        this.libroRepository.save(libroGuardar);
+        RespuestaGenericaRs rta = new RespuestaGenericaRs();
+        rta.setMessage("Se ha guardado el libro satisfactoriamente");
+        return rta;
     }
-    
+
     private Libro convertirLibroRqToLibro(LibroRq libroRq) throws BadRequestException {
         Libro libro = new Libro();
         libro.setAnioPublicacion(libroRq.getAnioPublicacion());
         Autor autor = this.autorService.obtenerAutorPorId(libroRq.getAutorId());
+        if (autor == null) {
+            throw new BadRequestException("No existe el autor con el ID proporcionado.");
+        }
         Optional<Categoria> optCat = this.categoriaRepository.findById(libroRq.getCategoriaId());
         if (!optCat.isPresent()) {
-            throw new BadRequestException("No existe la categoria");
+            throw new BadRequestException("No existe la categoria con el ID proporcionado.");
         }
         Categoria categoria = optCat.get();
         libro.setAutor(autor);
@@ -194,5 +129,72 @@ public class LibroServiceImpl implements LibroService {
         libro.setExistencias(libroRq.getExistencias());
         return libro;
     }
->>>>>>> desarrollo
+
+
+    @Override
+    public RespuestaGenericaRs actualizarLibro(Libro actualizarLibro) throws BadRequestException {
+        Optional<Libro> optLibro = this.libroRepository.findById(actualizarLibro.getIdLibro());
+        if (!optLibro.isPresent()) {
+            throw new BadRequestException("No existe el libro con el ID proporcionado.");
+        }
+
+        Libro libroActual = optLibro.get();
+
+        // Verifica si hay cambios reales
+        if (!hayCambiosEnLibro(libroActual, actualizarLibro)) {
+            RespuestaGenericaRs rta = new RespuestaGenericaRs();
+            rta.setMessage("No se detectaron cambios en el libro.");
+            return rta;
+        }
+
+        // Si cambió el título, valida si ya existe otro libro con ese título
+        if (!libroActual.getTitulo().trim().equalsIgnoreCase(actualizarLibro.getTitulo().trim())
+                && this.libroRepository.existsByTitulo(actualizarLibro.getTitulo())) {
+            throw new BadRequestException("Ya existe un libro con el título '" + actualizarLibro.getTitulo() + "'.");
+        }
+
+        // Valida el autor
+        if (actualizarLibro.getAutor() == null || actualizarLibro.getAutor().getAutorId() == null) {
+            throw new BadRequestException("Debe especificar un autor válido.");
+        }
+        Autor autor = this.autorService.obtenerAutorPorId(actualizarLibro.getAutor().getAutorId());
+        if (autor == null) {
+            throw new BadRequestException("No existe el autor con ID " + actualizarLibro.getAutor().getAutorId());
+        }
+
+        // Valida la categoría
+        if (actualizarLibro.getCategoria() == null || actualizarLibro.getCategoria().getCategoriaId() == null) {
+            throw new BadRequestException("Debe especificar una categoría válida.");
+        }
+        Optional<Categoria> optCat = this.categoriaRepository.findById(actualizarLibro.getCategoria().getCategoriaId());
+        if (!optCat.isPresent()) {
+            throw new BadRequestException("No existe la categoría con ID " + actualizarLibro.getCategoria().getCategoriaId());
+        }
+        Categoria categoria = optCat.get();
+
+        // Actualiza los campos
+        libroActual.setTitulo(actualizarLibro.getTitulo());
+        libroActual.setAnioPublicacion(actualizarLibro.getAnioPublicacion());
+        libroActual.setAutor(autor);
+        libroActual.setCategoria(categoria);
+        libroActual.setExistencias(actualizarLibro.getExistencias());
+
+        this.libroRepository.save(libroActual);
+
+        RespuestaGenericaRs rta = new RespuestaGenericaRs();
+        rta.setMessage("Se ha actualizado el libro satisfactoriamente.");
+        return rta;
+    }
+
+    private boolean hayCambiosEnLibro(Libro actual, Libro nuevo) {
+        if (nuevo.getAutor() == null || actual.getAutor() == null ||
+            nuevo.getCategoria() == null || actual.getCategoria() == null) {
+            return true; // Si alguna de las relaciones es nula, consideramos que hay cambio
+        }
+        return !actual.getTitulo().equals(nuevo.getTitulo()) ||
+               !Objects.equals(actual.getAnioPublicacion(), nuevo.getAnioPublicacion()) ||
+               !actual.getAutor().getAutorId().equals(nuevo.getAutor().getAutorId()) ||
+               !actual.getCategoria().getCategoriaId().equals(nuevo.getCategoria().getCategoriaId()) ||
+               !actual.getExistencias().equals(nuevo.getExistencias());
+    }
 }
