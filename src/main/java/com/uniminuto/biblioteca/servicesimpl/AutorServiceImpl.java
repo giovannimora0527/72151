@@ -1,11 +1,18 @@
 package com.uniminuto.biblioteca.servicesimpl;
 
 import com.uniminuto.biblioteca.entity.Autor;
+import com.uniminuto.biblioteca.entity.Nacionalidad;
+import com.uniminuto.biblioteca.model.AutorRq;
+import com.uniminuto.biblioteca.model.RespuestaGenericaRs;
 import com.uniminuto.biblioteca.repository.AutorRepository;
+import com.uniminuto.biblioteca.repository.NacionalidadRepository;
 import com.uniminuto.biblioteca.services.AutorService;
-import java.util.Comparator;
+
 import java.util.List;
 import java.util.Optional;
+
+
+import com.uniminuto.biblioteca.services.NacionalidadService;
 import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +26,9 @@ public class AutorServiceImpl implements AutorService {
 
     @Autowired
     private AutorRepository autorRepository;
+
+    @Autowired
+    private NacionalidadRepository nacionalidadRepository;
 
     @Override
     public List<Autor> obtenerListadoAutores() {
@@ -47,5 +57,38 @@ public class AutorServiceImpl implements AutorService {
         }
         return optAutor.get();
     }
+
+    @Override
+    public RespuestaGenericaRs crearAutor(AutorRq autorRq) throws BadRequestException {
+        // Paso 1. - en la bd si el libro existe por nombre
+        // Paso 2. SI ESTA => lanzo el error
+        // Paso 3. SINO esta Convertir mi objeto entrada rq a entidad Libro
+        // Paso 4. Guardo el registro
+        // Paso 5. Devolver una respuesta
+        if (this.autorRepository.existsByNombre(autorRq.getNombre())) {
+            throw new BadRequestException("El Autor se encuentra ya registrado");
+        }
+
+        Autor autorGuardar = this.convertirAutorRqToAutor(autorRq);
+        this.autorRepository.save(autorGuardar);
+        RespuestaGenericaRs rta = new RespuestaGenericaRs();
+        rta.setMessage("Se ha guardado el Autor satisfactoriamente");
+        return rta;
+    }
+
+    private Autor convertirAutorRqToAutor(AutorRq autorRq) throws BadRequestException {
+        Autor autor = new Autor();
+        autor.setFechaNacimiento(autorRq.getFechaNacimiento());
+        Optional<Nacionalidad> optCat = this.nacionalidadRepository.findById(autorRq.getNacionalidadId());
+        if (!optCat.isPresent()) {
+            throw new BadRequestException("No existe la Nacionalidad");
+        }
+        Nacionalidad nacionalidad = optCat.get();
+        autor.setFechaNacimiento(autorRq.getFechaNacimiento());
+        autor.setNombre(autorRq.getNombre());
+        autor.setNacionalidad(nacionalidad);
+        return autor;
+    }
+
 
 }
