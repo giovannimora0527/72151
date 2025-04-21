@@ -31,7 +31,7 @@ public class Autor implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_autor")
-    private Integer id;
+    private Integer autorId;
     
     /**
      * Nombre del autor.

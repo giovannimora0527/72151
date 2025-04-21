@@ -81,12 +81,6 @@
             <type>jar</type>
         </dependency>
         <dependency>
-<<<<<<< HEAD
-            <groupId>cloud.agileframework</groupId>
-            <artifactId>agile-sql</artifactId>
-            <version>2.0.0</version>
-            <type>jar</type>
-=======
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
@@ -94,7 +88,6 @@
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-test</artifactId>
             <scope>test</scope>
->>>>>>> 7d718bb03f5b91b34a27e06cc30dda87d7342579
         </dependency>
     </dependencies>
     <build>
