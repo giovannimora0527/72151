@@ -11,6 +11,7 @@ import com.uniminuto.biblioteca.services.AutorService;
 import com.uniminuto.biblioteca.services.LibroService;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,7 @@ public class LibroServiceImpl implements LibroService {
 
     @Autowired
     private AutorService autorService;
-    
+
     @Autowired
     private CategoriaRepository categoriaRepository;
 
@@ -94,29 +95,32 @@ public class LibroServiceImpl implements LibroService {
 
     @Override
     public RespuestaGenericaRs crearLibro(LibroRq libroRq) throws BadRequestException {
-       // Paso 1. - en la bd si el libro existe por nombre
-       // Paso 2. SI ESTA => lanzo el error
-       // Paso 3. SINO esta Convertir mi objeto entrada rq a entidad Libro
-       // Paso 4. Guardo el registro
-       // Paso 5. Devolver una respuesta
-       if (this.libroRepository.existsByTitulo(libroRq.getTitulo())) {
-           throw new BadRequestException("El libro se encuentra ya registrado");
-       }
-       
-       Libro libroGuardar = this.convertirLibroRqToLibro(libroRq);
-       this.libroRepository.save(libroGuardar);
-       RespuestaGenericaRs rta = new RespuestaGenericaRs();
-       rta.setMessage("Se ha guardado el libro satisfactoriamente");
-       return rta;
+        // Paso 1. - en la bd si el libro existe por nombre
+        // Paso 2. SI ESTA => lanzo el error
+        // Paso 3. SINO esta Convertir mi objeto entrada rq a entidad Libro
+        // Paso 4. Guardo el registro
+        // Paso 5. Devolver una respuesta
+        if (this.libroRepository.existsByTitulo(libroRq.getTitulo())) {
+            throw new BadRequestException("El libro se encuentra ya registrado");
+        }
+
+        Libro libroGuardar = this.convertirLibroRqToLibro(libroRq);
+        this.libroRepository.save(libroGuardar);
+        RespuestaGenericaRs rta = new RespuestaGenericaRs();
+        rta.setMessage("Se ha guardado el libro satisfactoriamente");
+        return rta;
     }
-    
+
     private Libro convertirLibroRqToLibro(LibroRq libroRq) throws BadRequestException {
         Libro libro = new Libro();
         libro.setAnioPublicacion(libroRq.getAnioPublicacion());
         Autor autor = this.autorService.obtenerAutorPorId(libroRq.getAutorId());
+        if (autor == null) {
+            throw new BadRequestException("No existe el autor con el ID proporcionado.");
+        }
         Optional<Categoria> optCat = this.categoriaRepository.findById(libroRq.getCategoriaId());
         if (!optCat.isPresent()) {
-            throw new BadRequestException("No existe la categoria");
+            throw new BadRequestException("No existe la categoria con el ID proporcionado.");
         }
         Categoria categoria = optCat.get();
         libro.setAutor(autor);
@@ -124,5 +128,73 @@ public class LibroServiceImpl implements LibroService {
         libro.setTitulo(libroRq.getTitulo());
         libro.setExistencias(libroRq.getExistencias());
         return libro;
+    }
+
+
+    @Override
+    public RespuestaGenericaRs actualizarLibro(Libro actualizarLibro) throws BadRequestException {
+        Optional<Libro> optLibro = this.libroRepository.findById(actualizarLibro.getIdLibro());
+        if (!optLibro.isPresent()) {
+            throw new BadRequestException("No existe el libro con el ID proporcionado.");
+        }
+
+        Libro libroActual = optLibro.get();
+
+        // Verifica si hay cambios reales
+        if (!hayCambiosEnLibro(libroActual, actualizarLibro)) {
+            RespuestaGenericaRs rta = new RespuestaGenericaRs();
+            rta.setMessage("No se detectaron cambios en el libro.");
+            return rta;
+        }
+
+        // Si cambió el título, valida si ya existe otro libro con ese título
+        if (!libroActual.getTitulo().trim().equalsIgnoreCase(actualizarLibro.getTitulo().trim())
+                && this.libroRepository.existsByTitulo(actualizarLibro.getTitulo())) {
+            throw new BadRequestException("Ya existe un libro con el título '" + actualizarLibro.getTitulo() + "'.");
+        }
+
+        // Valida el autor
+        if (actualizarLibro.getAutor() == null || actualizarLibro.getAutor().getAutorId() == null) {
+            throw new BadRequestException("Debe especificar un autor válido.");
+        }
+        Autor autor = this.autorService.obtenerAutorPorId(actualizarLibro.getAutor().getAutorId());
+        if (autor == null) {
+            throw new BadRequestException("No existe el autor con ID " + actualizarLibro.getAutor().getAutorId());
+        }
+
+        // Valida la categoría
+        if (actualizarLibro.getCategoria() == null || actualizarLibro.getCategoria().getCategoriaId() == null) {
+            throw new BadRequestException("Debe especificar una categoría válida.");
+        }
+        Optional<Categoria> optCat = this.categoriaRepository.findById(actualizarLibro.getCategoria().getCategoriaId());
+        if (!optCat.isPresent()) {
+            throw new BadRequestException("No existe la categoría con ID " + actualizarLibro.getCategoria().getCategoriaId());
+        }
+        Categoria categoria = optCat.get();
+
+        // Actualiza los campos
+        libroActual.setTitulo(actualizarLibro.getTitulo());
+        libroActual.setAnioPublicacion(actualizarLibro.getAnioPublicacion());
+        libroActual.setAutor(autor);
+        libroActual.setCategoria(categoria);
+        libroActual.setExistencias(actualizarLibro.getExistencias());
+
+        this.libroRepository.save(libroActual);
+
+        RespuestaGenericaRs rta = new RespuestaGenericaRs();
+        rta.setMessage("Se ha actualizado el libro satisfactoriamente.");
+        return rta;
+    }
+
+    private boolean hayCambiosEnLibro(Libro actual, Libro nuevo) {
+        if (nuevo.getAutor() == null || actual.getAutor() == null ||
+            nuevo.getCategoria() == null || actual.getCategoria() == null) {
+            return true; // Si alguna de las relaciones es nula, consideramos que hay cambio
+        }
+        return !actual.getTitulo().equals(nuevo.getTitulo()) ||
+               !Objects.equals(actual.getAnioPublicacion(), nuevo.getAnioPublicacion()) ||
+               !actual.getAutor().getAutorId().equals(nuevo.getAutor().getAutorId()) ||
+               !actual.getCategoria().getCategoriaId().equals(nuevo.getCategoria().getCategoriaId()) ||
+               !actual.getExistencias().equals(nuevo.getExistencias());
     }
 }
