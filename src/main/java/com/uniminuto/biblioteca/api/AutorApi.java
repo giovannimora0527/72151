@@ -3,6 +3,7 @@ package com.uniminuto.biblioteca.api;
 import com.uniminuto.biblioteca.entity.Autor;
 import java.util.List;
 
+import com.uniminuto.biblioteca.entity.Usuario;
 import com.uniminuto.biblioteca.model.AutorRq;
 import com.uniminuto.biblioteca.model.LibroRq;
 import com.uniminuto.biblioteca.model.RespuestaGenericaRs;
@@ -64,5 +65,13 @@ public interface AutorApi {
             method = RequestMethod.POST)
     ResponseEntity<RespuestaGenericaRs> crearAutor(@RequestBody AutorRq AutorRq)
             throws BadRequestException;
-    
+
+    @RequestMapping(value = "/actualizar-autor",
+            produces = {"application/json"},
+            consumes = {"application/json"},
+            method = RequestMethod.POST)
+    ResponseEntity<RespuestaGenericaRs> actualizarAutor(@RequestBody Autor autor)
+            throws BadRequestException;
+
+
 }

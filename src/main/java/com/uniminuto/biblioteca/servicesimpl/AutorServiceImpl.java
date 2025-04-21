@@ -2,6 +2,7 @@ package com.uniminuto.biblioteca.servicesimpl;
 
 import com.uniminuto.biblioteca.entity.Autor;
 import com.uniminuto.biblioteca.entity.Nacionalidad;
+import com.uniminuto.biblioteca.entity.Usuario;
 import com.uniminuto.biblioteca.model.AutorRq;
 import com.uniminuto.biblioteca.model.RespuestaGenericaRs;
 import com.uniminuto.biblioteca.repository.AutorRepository;
@@ -90,5 +91,40 @@ public class AutorServiceImpl implements AutorService {
         return autor;
     }
 
+
+    @Override
+    public RespuestaGenericaRs actualizarAutor(Autor autor) throws BadRequestException {
+        Optional<Autor> optUser = this.autorRepository
+                .findById(autor.getAutorId());
+        if (!optUser.isPresent()) {
+            throw new BadRequestException("No existe el Autor.");
+        }
+
+        Autor autorActual = optUser.get();
+        RespuestaGenericaRs rta = new RespuestaGenericaRs();
+        rta.setMessage("Se ha actualizado el registro satisfactoriamente");
+        if (!compararObjetosUsuarioActualizar(autorActual, autor)) {
+            return rta;
+        }
+
+        if (!autorActual.getNombre().equals(autor.getNombre())) {
+            // El nombre cambio
+            if (this.autorRepository.existsByNombre(autor.getNombre())) {
+                throw new BadRequestException("El autor " + autor.getNombre() + ", existe en la bd. por favor verifique.");
+            }
+        }
+
+        autorActual.setNombre(autor.getNombre());
+        autorActual.setNacionalidad(autor.getNacionalidad());
+        autorActual.setFechaNacimiento(autor.getFechaNacimiento());
+        this.autorRepository.save(autorActual);
+        return rta;
+    }
+
+    private boolean compararObjetosUsuarioActualizar(Autor autorActual, Autor autorFront) {
+        return !autorActual.getNombre().equals(autorFront.getNombre())
+                || !autorActual.getNacionalidad().equals(autorFront.getNacionalidad())
+                || !autorActual.getFechaNacimiento().equals(autorFront.getFechaNacimiento());
+    }
 
 }

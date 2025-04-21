@@ -2,6 +2,7 @@ package com.uniminuto.biblioteca.apicontroller;
 
 import com.uniminuto.biblioteca.api.AutorApi;
 import com.uniminuto.biblioteca.entity.Autor;
+import com.uniminuto.biblioteca.entity.Usuario;
 import com.uniminuto.biblioteca.model.AutorRq;
 import com.uniminuto.biblioteca.model.LibroRq;
 import com.uniminuto.biblioteca.model.RespuestaGenericaRs;
@@ -44,5 +45,10 @@ public class AutorApiController implements AutorApi {
     @Override
     public ResponseEntity<RespuestaGenericaRs> crearAutor(AutorRq AutorRq) throws BadRequestException {
         return ResponseEntity.ok(this.autorService.crearAutor(AutorRq));
+    }
+
+    @Override
+    public ResponseEntity<RespuestaGenericaRs> actualizarAutor(Autor autor) throws BadRequestException {
+        return ResponseEntity.ok(this.autorService.actualizarAutor(autor));
     }
 }
