@@ -28,6 +28,12 @@ target/
 build/
 !**/src/main/**/build/
 !**/src/test/**/build/
+.mvn/
+mvnw
+mvnw.cmd
+nb-configuration.xml
+nbactions.xml
+
 
 ### VS Code ###
 .vscode/
