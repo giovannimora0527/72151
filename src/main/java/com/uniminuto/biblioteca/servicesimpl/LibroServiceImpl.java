@@ -114,6 +114,7 @@ public class LibroServiceImpl implements LibroService {
         Libro libro = new Libro();
         libro.setAnioPublicacion(libroRq.getAnioPublicacion());
         Autor autor = this.autorService.obtenerAutorPorId(libroRq.getAutorId());
+
         Optional<Categoria> optCat = this.categoriaRepository.findById(libroRq.getCategoriaId());
         if (!optCat.isPresent()) {
             throw new BadRequestException("No existe la categoria");

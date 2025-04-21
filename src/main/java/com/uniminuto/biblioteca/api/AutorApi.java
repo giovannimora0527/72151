@@ -4,7 +4,9 @@ import com.uniminuto.biblioteca.entity.Autor;
 import java.util.List;
 
 import com.uniminuto.biblioteca.entity.Usuario;
-import com.uniminuto.biblioteca.model.*;
+import com.uniminuto.biblioteca.model.AutorRq;
+import com.uniminuto.biblioteca.model.LibroRq;
+import com.uniminuto.biblioteca.model.RespuestaGenericaRs;
 import org.apache.coyote.BadRequestException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,6 +31,20 @@ public interface AutorApi {
     ResponseEntity<List<Autor>> listarAutores()
             throws BadRequestException;
 
+    /**
+     * Metodo para listar los autores registrados en bd.
+     *
+     * @param nacionalidad nacionalidad del autor.
+     * @return Lista de autores.
+     * @throws BadRequestException excepcion.
+     */
+    @RequestMapping(value = "/listar-nacionalidad",
+            produces = {"application/json"},
+            consumes = {"application/json"},
+            method = RequestMethod.GET)
+    ResponseEntity<List<Autor>> listarAutoresByNacionalidad(
+            @RequestParam String nacionalidad)
+            throws BadRequestException;
 
     /**
      * Metodo para listar los autores registrados en bd.
@@ -43,12 +59,11 @@ public interface AutorApi {
     ResponseEntity<Autor> listarAutorPorId(@RequestParam Integer autorIds)
             throws BadRequestException;
 
-
     @RequestMapping(value = "/guardar-autor",
             produces = {"application/json"},
             consumes = {"application/json"},
             method = RequestMethod.POST)
-    ResponseEntity<AutorRs> guardarAutor(@RequestBody AutorRq autor)
+    ResponseEntity<RespuestaGenericaRs> crearAutor(@RequestBody AutorRq AutorRq)
             throws BadRequestException;
 
     @RequestMapping(value = "/actualizar-autor",
@@ -57,4 +72,6 @@ public interface AutorApi {
             method = RequestMethod.POST)
     ResponseEntity<RespuestaGenericaRs> actualizarAutor(@RequestBody Autor autor)
             throws BadRequestException;
+
+
 }
