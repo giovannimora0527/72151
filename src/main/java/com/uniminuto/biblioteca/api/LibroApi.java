@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface LibroApi {
 
     /**
-     * Metodo para listar los autores registrados en bd.
+     * Metodo para listar los libros registrados en bd.
      *
      * @return Lista de libros registrados.
      * @throws BadRequestException excepcion.
@@ -92,7 +92,6 @@ public interface LibroApi {
             @RequestParam Integer anioFin)
             throws BadRequestException;
     
-   
     /**
      * Metodo para guardar un libro nuevo.
      *
@@ -105,6 +104,20 @@ public interface LibroApi {
             consumes = {"application/json"},
             method = RequestMethod.POST)
     ResponseEntity<RespuestaGenericaRs> crearLibro(@RequestBody LibroRq LibroRq)
+            throws BadRequestException;
+    
+    
+    /**
+     * Metodo para listar los libros disponibles para prestamo.
+     *
+     * @return Lista de libros disponibles.
+     * @throws BadRequestException excepcion.
+     */
+    @RequestMapping(value = "/listar-for-prestamo",
+            produces = {"application/json"},
+            consumes = {"application/json"},
+            method = RequestMethod.GET)
+    ResponseEntity<List<Libro>> listarLibrosParaPrestamo()
             throws BadRequestException;
     
 }

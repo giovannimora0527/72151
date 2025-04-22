@@ -1,13 +1,13 @@
 package com.uniminuto.biblioteca.servicesimpl;
 
 import com.uniminuto.biblioteca.entity.Usuario;
-import com.uniminuto.biblioteca.model.RespuestaGenericaRs;
 import com.uniminuto.biblioteca.model.UsuarioRq;
 import com.uniminuto.biblioteca.model.UsuarioRs;
 import com.uniminuto.biblioteca.repository.UsuarioRepository;
 import com.uniminuto.biblioteca.services.UsuarioService;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Pattern;
 import org.apache.coyote.BadRequestException;
@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
+ * Implementacion del servicio para usuarios.
  *
  * @author lmora
  */
@@ -44,108 +45,103 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     @Override
     public Usuario buscarPorCorreo(String correo) throws BadRequestException {
-        if (correo == null || correo.isBlank()) {
-            throw new BadRequestException("El correo: " + correo + ", no cumple "
-                    + "la validación para ser un correo valido.");
+        Objects.requireNonNull(correo, "El correo es obligatorio");
+
+        if (correo.isBlank() || !validarCorreo(correo)) {
+            throw new BadRequestException("El correo proporcionado no es válido.");
         }
 
-        boolean isValidoEmail = this.validarCorreo(correo);
-        if (!isValidoEmail) {
-            throw new BadRequestException("El correo no es valido.");
-        }
-
-        Optional<Usuario> optUsuario = this.usuarioRepository
-                .findByCorreo(correo);
-        if (!optUsuario.isPresent()) {
-            throw new BadRequestException("No hay registros de usuarios "
-                    + "registrados con el correo ingresado.");
-        }
-        return optUsuario.get();
+        return usuarioRepository.findByCorreo(correo)
+                .orElseThrow(() -> new BadRequestException("No hay registros de "
+                + "usuarios con el correo ingresado."));
     }
 
     /**
+     * Funcion para validar un correo.
      *
-     * @param correo
-     * @return
+     * @param correo correo a validar.
+     * @return si es valido o no.
      */
-    public boolean validarCorreo(String correo) {
-        if (correo == null || correo.isBlank()) {
-            return false;
-        }
+    private boolean validarCorreo(String correo) {
         return EMAIL_PATTERN.matcher(correo).matches();
     }
 
     @Override
-    public UsuarioRs guardarUsuario(UsuarioRq usuario) throws BadRequestException {
-        Optional<Usuario> optUser = this.usuarioRepository.findByNombre(usuario.getNombre());
+    public UsuarioRs guardarUsuarioNuevo(UsuarioRq usuarioNuevo)
+            throws BadRequestException {
+     
+        Optional<Usuario> optUser = this.usuarioRepository.findByNombre(usuarioNuevo.getNombre());
         if (optUser.isPresent()) {
-            throw new BadRequestException("El usuario ya se encuentra registrado. Intente de nuevo.");
+            throw new BadRequestException("El nombre del usuario ya existe. Corrija e intente de nuevo.");
         }
-
-        optUser = this.usuarioRepository.findByCorreo(usuario.getCorreo());
+        optUser = this.usuarioRepository.findByCorreo(usuarioNuevo.getCorreo());
         if (optUser.isPresent()) {
-            throw new BadRequestException("El correo del usuario ya se encuentra registrado. Intente de nuevo.");
+            throw new BadRequestException("El correo del usuario ya existe. Corrija e intente de nuevo.");
         }
-
-        Usuario userToSave = this.transformarUsuarioRqToUsuario(usuario);
-        this.usuarioRepository.save(userToSave);
-
+        this.usuarioRepository.save(this.convertirUsuarioRqToUsuario(usuarioNuevo));
         UsuarioRs rta = new UsuarioRs();
-        rta.setMessage("El usuario se ha creado satisfactoriamente.");
+        rta.setStatus(200);
+        rta.setMessage("Se ha guardado el usuario satisfactoriamente");
         return rta;
     }
 
-    private Usuario transformarUsuarioRqToUsuario(UsuarioRq usuario) {
-        Usuario user = new Usuario();
-        user.setActivo(true);
-        user.setCorreo(usuario.getCorreo());
-        user.setFechaRegistro(LocalDateTime.now());
-        user.setNombre(usuario.getNombre());
-        user.setTelefono(usuario.getTelefono());
-        return user;
+    private Usuario convertirUsuarioRqToUsuario(UsuarioRq usuarioNuevo) {
+        Usuario usuario = new Usuario();
+        usuario.setCorreo(usuarioNuevo.getCorreo());
+        usuario.setFechaRegistro(LocalDateTime.now());
+        usuario.setNombre(usuarioNuevo.getNombre());
+        usuario.setTelefono(usuarioNuevo.getTelefono());
+        usuario.setActivo(true);
+        return usuario;
     }
 
     @Override
-    public RespuestaGenericaRs actualizarUsuario(Usuario usuario) throws BadRequestException {
-        Optional<Usuario> optUser = this.usuarioRepository
+    public UsuarioRs actualizarUsuario(Usuario usuario)
+            throws BadRequestException {        
+        UsuarioRs rta = new UsuarioRs();
+        rta.setStatus(200);
+        rta.setMessage("Se ha actualizado satisfactoriamente.");
+        Optional<Usuario> optUserOrigin = this.usuarioRepository
                 .findById(usuario.getIdUsuario());
-        if (!optUser.isPresent()) {
-            throw new BadRequestException("No existe el usuario.");
-        }
-
-        Usuario userActual = optUser.get();
-        RespuestaGenericaRs rta = new RespuestaGenericaRs();
-        rta.setMessage("Se ha actualizado el registro satisfactoriamente");
-        if (!compararObjetosUsuarioActualizar(userActual, usuario)) {
+        if (!cambioObjeto(optUserOrigin.get(), usuario)) {
             return rta;
         }
-
-        if (!userActual.getNombre().equals(usuario.getNombre())) {
-            // El nombre cambio
+        // SI cambio datos.
+        Usuario userActualizar = optUserOrigin.get();
+        if (!usuario.getNombre().equals(userActualizar.getNombre())) {
             if (this.usuarioRepository.existsByNombre(usuario.getNombre())) {
-                throw new BadRequestException("El usuario " + usuario.getNombre() + ", existe en la bd. por favor verifique.");
+               throw new BadRequestException("El usuario ya está registrado "
+                       + "con el nombre " + usuario.getNombre());
             }
         }
-
-        if (!userActual.getCorreo().equals(usuario.getCorreo())) {
-            // El correo cambio
+        if (!usuario.getCorreo().equals(userActualizar.getCorreo())) {
             if (this.usuarioRepository.existsByCorreo(usuario.getCorreo())) {
-                throw new BadRequestException("El correo" + usuario.getCorreo() + ", existe en la bd. por favor verifique.");
+                throw new BadRequestException("El usuario ya está registrado "
+                       + "con el correo " + usuario.getCorreo());
             }
         }
-
-        userActual.setNombre(usuario.getNombre());
-        userActual.setCorreo(usuario.getCorreo());
-        userActual.setTelefono(usuario.getTelefono());
-        userActual.setActivo(usuario.getActivo());
-        this.usuarioRepository.save(userActual);
+        userActualizar.setNombre(usuario.getNombre());
+        userActualizar.setCorreo(usuario.getCorreo());
+        userActualizar.setTelefono(usuario.getTelefono());
+        userActualizar.setActivo(usuario.getActivo());
+        this.usuarioRepository.save(userActualizar);
         return rta;
     }
 
-    private boolean compararObjetosUsuarioActualizar(Usuario usuarioActual, Usuario usuarioFront) {
-        return !usuarioActual.getNombre().equals(usuarioFront.getNombre())
-                || !usuarioActual.getCorreo().equals(usuarioFront.getCorreo())
-                || !usuarioActual.getTelefono().equals(usuarioFront.getTelefono())
-                || !usuarioActual.getActivo().equals(usuarioFront.getActivo());
+    private boolean cambioObjeto(Usuario userOrigin, Usuario usuarioFront) {
+        if (!userOrigin.getNombre().equals(usuarioFront.getNombre())) {
+            return true;
+        }
+        if (!userOrigin.getCorreo().equals(usuarioFront.getCorreo())) {
+            return true;
+        }
+        if (!userOrigin.getTelefono().equals(usuarioFront.getTelefono())) {
+            return true;
+        }
+        if (!userOrigin.getActivo().equals(usuarioFront.getActivo())) {
+            return true;
+        }
+        return false;
     }
+
 }

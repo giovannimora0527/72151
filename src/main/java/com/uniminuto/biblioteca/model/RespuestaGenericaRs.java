@@ -8,5 +8,12 @@ import lombok.Data;
  */
 @Data
 public class RespuestaGenericaRs {
+    /**
+     * Status del servicio.
+     */
+    private Integer status;
+    /**
+     * Mensaje del servicio.
+     */
     private String message;
 }
