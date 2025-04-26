@@ -5,6 +5,8 @@ import com.uniminuto.biblioteca.model.AutorRq;
 import com.uniminuto.biblioteca.model.RespuestaGenericaRs;
 import com.uniminuto.biblioteca.repository.AutorRepository;
 import com.uniminuto.biblioteca.services.AutorService;
+
+import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -59,6 +61,11 @@ public class AutorServiceImpl implements AutorService {
             throw new BadRequestException("El autor ya se encuentra registrado con ese nombre. Intente de nuevo.");
         }
 
+        LocalDate hoy = LocalDate.now();
+        if (autorRq.getFechaNacimiento() == null || !autorRq.getFechaNacimiento().isBefore(hoy)) {
+            throw new BadRequestException("La fecha de nacimiento no puede ser la de hoy ni una fecha futura.");
+        }
+
         // Crear el autor a partir del Request
         Autor autor = new Autor();
         autor.setNombre(autorRq.getNombre());
@@ -81,6 +88,11 @@ public class AutorServiceImpl implements AutorService {
         Optional<Autor> autorOpt = this.autorRepository.findById(autor.getAutorId());
         if (!autorOpt.isPresent()) {
             throw new BadRequestException("No se encuentra el autor con el id " + autor.getAutorId());
+        }
+
+        LocalDate hoy = LocalDate.now();
+        if (autor.getFechaNacimiento() == null || !autor.getFechaNacimiento().isBefore(hoy)) {
+            throw new BadRequestException("La fecha de nacimiento no puede ser la de hoy ni una fecha futura.");
         }
 
         Autor autorActual = autorOpt.get();
