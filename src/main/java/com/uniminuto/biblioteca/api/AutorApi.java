@@ -48,7 +48,7 @@ public interface AutorApi {
             produces = {"application/json"},
             consumes = {"application/json"},
             method = RequestMethod.POST)
-    ResponseEntity<AutorRs> guardarAutor(@RequestBody AutorRq autor)
+    ResponseEntity<AutorRs> guardarAutor(@RequestBody AutorRq autorRq)
             throws BadRequestException;
 
     @RequestMapping(value = "/actualizar-autor",

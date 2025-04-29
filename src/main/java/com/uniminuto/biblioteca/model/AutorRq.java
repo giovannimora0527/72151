@@ -4,8 +4,10 @@ import lombok.Data;
 import java.time.LocalDate;
 
 @Data
-public class AutorRq {
+public class AutorRq 
+{
+    private Integer autorId;
     private String nombre;
-    private String  nacionalidad;
+    private Integer nacionalidadId;
     private LocalDate fechaNacimiento;
 }

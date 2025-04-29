@@ -1,11 +1,12 @@
 package com.uniminuto.biblioteca.servicesimpl;
 
 import com.uniminuto.biblioteca.entity.Autor;
-import com.uniminuto.biblioteca.entity.Usuario;
+import com.uniminuto.biblioteca.entity.Nacionalidad;
 import com.uniminuto.biblioteca.model.AutorRq;
 import com.uniminuto.biblioteca.model.AutorRs;
 import com.uniminuto.biblioteca.model.RespuestaGenericaRs;
 import com.uniminuto.biblioteca.repository.AutorRepository;
+import com.uniminuto.biblioteca.repository.NacionalidadRepository;
 import com.uniminuto.biblioteca.services.AutorService;
 
 import java.util.List;
@@ -23,6 +24,9 @@ public class AutorServiceImpl implements AutorService {
 
     @Autowired
     private AutorRepository autorRepository;
+    
+    @Autowired
+    private NacionalidadRepository nacionalidadRepository;
 
     @Override
     public List<Autor> obtenerListadoAutores() {
@@ -44,20 +48,24 @@ public class AutorServiceImpl implements AutorService {
         Autor authorToSave = this.transformarAutorRqToAutor(autor);
         this.autorRepository.save(authorToSave);
 
-        AutorRs rta= new AutorRs();
+        AutorRs rta = new AutorRs();
         rta.setMessage("El autor se ha registrado correctamente.");
 
         return rta;
     }
 
-        private Autor transformarAutorRqToAutor(AutorRq autor) {
+    private Autor transformarAutorRqToAutor(AutorRq autor) {
         Autor author = new Autor();
         author.setNombre(autor.getNombre());
         author.setFechaNacimiento(autor.getFechaNacimiento());
-        author.setNacionalidad(autor.getNacionalidad());
+        Optional<Nacionalidad> optNacionalidad = this.nacionalidadRepository
+                .findById(autor.getNacionalidadId());
+        if (!optNacionalidad.isPresent()) {
+           // Lanza error
+        }
+        author.setNacionalidad(optNacionalidad.get());
         return author;
     }
-
 
     @Override
     public RespuestaGenericaRs actualizarAutor(Autor autor) throws BadRequestException {
@@ -76,7 +84,7 @@ public class AutorServiceImpl implements AutorService {
 
         if (!autorActual.getNombre().equals(autor.getNombre())) {
             // El nombre cambio
-            if (this.autorRepository.existsByNombre(autor.getNombre())){
+            if (this.autorRepository.existsByNombre(autor.getNombre())) {
                 throw new BadRequestException("El autor " + autor.getNombre() + ", existe en la bd. por favor verifique.");
             }
         }
@@ -91,7 +99,7 @@ public class AutorServiceImpl implements AutorService {
     // Aca permite como tal actualizar los datos, si no esta mapeado los campos aca, no se van a actualizar
     private boolean compararObjetosAutorActualizar(Autor autorActual, Autor autorFront) {
         return !autorActual.getNombre().equals(autorFront.getNombre())
-            || !autorActual.getNacionalidad().equals(autorFront.getNacionalidad())
-            || !autorActual.getFechaNacimiento().equals(autorFront.getFechaNacimiento());
+                || !autorActual.getNacionalidad().equals(autorFront.getNacionalidad())
+                || !autorActual.getFechaNacimiento().equals(autorFront.getFechaNacimiento());
     }
 }

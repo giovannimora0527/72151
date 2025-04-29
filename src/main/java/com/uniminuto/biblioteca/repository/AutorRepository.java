@@ -21,7 +21,7 @@ public interface AutorRepository extends
 
     Boolean existsByNacionalidad(String nacionalidad);
 
-    Optional<Autor> findByNacionalidad(String nacionalidad);
+    Optional<Autor> findByNacionalidad(Integer nacionalidad);
 
     Optional<Autor> findByFechaNacimiento(LocalDate fechaNacimiento);
     
