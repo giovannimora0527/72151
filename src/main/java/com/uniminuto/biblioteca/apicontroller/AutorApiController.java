@@ -10,6 +10,7 @@ import java.util.List;
 import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -36,7 +37,7 @@ public class AutorApiController implements AutorApi {
     }
 
     @Override
-    public ResponseEntity<AutorRs> guardarAutor(AutorRq autor) throws BadRequestException {
+    public ResponseEntity<AutorRs> guardarAutor(@RequestBody AutorRq autor) throws BadRequestException {
         return ResponseEntity.ok(this.autorService.guardarAutor(autor));
     }
 

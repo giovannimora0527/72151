@@ -3,7 +3,6 @@ package com.uniminuto.biblioteca.services;
 import com.uniminuto.biblioteca.entity.Autor;
 import java.util.List;
 
-import com.uniminuto.biblioteca.entity.Usuario;
 import com.uniminuto.biblioteca.model.*;
 import org.apache.coyote.BadRequestException;
 

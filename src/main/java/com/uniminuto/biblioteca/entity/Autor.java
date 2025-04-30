@@ -4,9 +4,13 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import lombok.Data;
 
@@ -40,9 +44,10 @@ public class Autor implements Serializable {
     /**
      * Nacionalidad del autor.
      */
-    @Column(name = "nacionalidad", length = 50)
-    private String nacionalidad;
-    
+  @ManyToOne(fetch = FetchType.EAGER) // o LAZY si usas JOIN FETCH en consulta
+@JoinColumn(name = "nacionalidad_id", referencedColumnName = "nacionalidad_id")
+private Nacionalidad nacionalidad;
+  
     /**
      * Fecha de nacimiento del autor.
      */
