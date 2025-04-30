@@ -13,7 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
-import javax.persistence.Table;
+import javax.persistence.*;
 import lombok.Data;
 
 @Data
@@ -54,6 +54,7 @@ public class Prestamo {
     // ========== Lógica para calcular el estado automáticamente ==========
     @PrePersist
     @PreUpdate
+    @PostLoad 
     public void calcularEstado() {
         if (fechaEntrega != null) {
             estado = EstadoPrestamo.DEVUELTO;

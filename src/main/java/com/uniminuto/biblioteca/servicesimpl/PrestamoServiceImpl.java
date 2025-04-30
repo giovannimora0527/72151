@@ -2,6 +2,7 @@ package com.uniminuto.biblioteca.servicesimpl;
 
 import com.uniminuto.biblioteca.entity.Libro;
 import com.uniminuto.biblioteca.entity.Prestamo;
+import com.uniminuto.biblioteca.entity.Prestamo.EstadoPrestamo;
 import com.uniminuto.biblioteca.model.PrestamoDto;
 import com.uniminuto.biblioteca.model.PrestamoRq;
 import com.uniminuto.biblioteca.model.RespuestaGenericaRs;
@@ -20,6 +21,7 @@ import java.util.stream.Collectors;
 import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -37,8 +39,20 @@ public class PrestamoServiceImpl  implements PrestamoService  {
 
 
     @Override
+    @Transactional
     public List<PrestamoDto> listarPrestamos() {
-        return prestamoRepository.findAll().stream()
+        List<Prestamo> prestamos = prestamoRepository.findAll();
+        
+        prestamos.forEach(prestamo -> {
+            EstadoPrestamo estadoOriginal = prestamo.getEstado();
+            prestamo.calcularEstado(); // Forzar cálculo
+            
+            if (prestamo.getEstado() != estadoOriginal) {
+                prestamoRepository.save(prestamo); // Update en BD
+            }
+        });
+    
+        return prestamos.stream()
             .map(this::convertirAResumenDTO)
             .collect(Collectors.toList());
     }
