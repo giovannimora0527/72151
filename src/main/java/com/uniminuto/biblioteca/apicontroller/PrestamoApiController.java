@@ -2,9 +2,13 @@ package com.uniminuto.biblioteca.apicontroller;
 
 import com.uniminuto.biblioteca.api.PrestamoApi;
 import com.uniminuto.biblioteca.entity.Prestamo;
+import com.uniminuto.biblioteca.model.PrestamoDto;
+import com.uniminuto.biblioteca.model.PrestamoRq;
+import com.uniminuto.biblioteca.model.RespuestaGenericaRs;
 import com.uniminuto.biblioteca.services.PrestamoService;
 import java.util.List;
 import org.apache.coyote.BadRequestException;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,7 +20,14 @@ public class PrestamoApiController implements PrestamoApi {
     private PrestamoService prestamoService;
 
     @Override
-    public ResponseEntity<List<Prestamo>> listarPrestamos() throws BadRequestException {
+    public ResponseEntity<List<PrestamoDto>> listarPrestamos() throws BadRequestException {
         return ResponseEntity.ok(prestamoService.listarPrestamos());
+    }
+
+    
+    @Override
+    public ResponseEntity<RespuestaGenericaRs> crearPrestamo(@RequestBody PrestamoRq prestamoRq) 
+        throws BadRequestException {
+        return ResponseEntity.ok(prestamoService.crearPrestamo(prestamoRq));
     }
 }

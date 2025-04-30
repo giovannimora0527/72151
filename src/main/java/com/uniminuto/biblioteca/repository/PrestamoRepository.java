@@ -6,7 +6,8 @@ import java.time.LocalDate;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import java.util.Optional;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 /**
  *
@@ -15,4 +16,7 @@ import java.util.Optional;
 @Repository
 public interface PrestamoRepository  extends
                 JpaRepository<Prestamo, Integer> {
+
+    @Query("SELECT COUNT(p) FROM Prestamo p WHERE p.libro.idLibro = :idLibro AND p.fechaEntrega IS NULL")
+    int countPrestamosActivosPorLibro(@Param("idLibro") Integer idLibro);
 }

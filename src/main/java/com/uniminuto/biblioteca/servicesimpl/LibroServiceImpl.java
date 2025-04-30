@@ -7,6 +7,7 @@ import com.uniminuto.biblioteca.model.LibroRq;
 import com.uniminuto.biblioteca.model.RespuestaGenericaRs;
 import com.uniminuto.biblioteca.repository.CategoriaRepository;
 import com.uniminuto.biblioteca.repository.LibroRepository;
+import com.uniminuto.biblioteca.repository.PrestamoRepository;
 import com.uniminuto.biblioteca.services.AutorService;
 import com.uniminuto.biblioteca.services.LibroService;
 import java.util.Collections;
@@ -29,6 +30,9 @@ public class LibroServiceImpl implements LibroService {
     @Autowired
     private AutorService autorService;
     
+    @Autowired
+    private PrestamoRepository prestamoRepository;
+
     @Autowired
     private CategoriaRepository categoriaRepository;
 
@@ -124,5 +128,11 @@ public class LibroServiceImpl implements LibroService {
         libro.setTitulo(libroRq.getTitulo());
         libro.setExistencias(libroRq.getExistencias());
         return libro;
+    }
+    @Override
+    public boolean estaDisponible(Integer idLibro) throws BadRequestException {
+        Libro libro = this.obtenerLibroId(idLibro);
+        int prestamosActivos = prestamoRepository.countPrestamosActivosPorLibro(idLibro);
+        return libro.getExistencias() > prestamosActivos;
     }
 }

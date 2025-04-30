@@ -61,4 +61,13 @@ public interface LibroService {
      * @throws BadRequestException 
      */
     RespuestaGenericaRs crearLibro(LibroRq LibroRq) throws BadRequestException;
+
+
+    /** Verifica si el libro esta disponible
+     * 
+     * @param LibroRq
+     * @return
+     * @throws BadRequestException 
+     */
+    boolean estaDisponible(Integer idLibro) throws BadRequestException;
 }

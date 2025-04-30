@@ -148,4 +148,15 @@ public class UsuarioServiceImpl implements UsuarioService {
                 || !usuarioActual.getTelefono().equals(usuarioFront.getTelefono())
                 || !usuarioActual.getActivo().equals(usuarioFront.getActivo());
     }
+
+    @Override
+    public Usuario obtenerUsuarioPorId(Integer idUsuario) throws BadRequestException {
+        return usuarioRepository.findById(idUsuario)
+            .orElseThrow(() -> new BadRequestException("Usuario no encontrado."));
+    }
+
+    @Override
+    public boolean existeUsuario(Integer idUsuario) {
+        return usuarioRepository.existsById(idUsuario);
+    }
 }
