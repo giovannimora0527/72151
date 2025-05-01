@@ -5,6 +5,7 @@ import com.uniminuto.biblioteca.entity.Prestamo;
 import com.uniminuto.biblioteca.model.PrestamoDto;
 import com.uniminuto.biblioteca.model.PrestamoRq;
 import com.uniminuto.biblioteca.model.RespuestaGenericaRs;
+import com.uniminuto.biblioteca.model.PrestamosActualizarRq;
 import com.uniminuto.biblioteca.services.PrestamoService;
 import java.util.List;
 import org.apache.coyote.BadRequestException;
@@ -29,5 +30,12 @@ public class PrestamoApiController implements PrestamoApi {
     public ResponseEntity<RespuestaGenericaRs> crearPrestamo(@RequestBody PrestamoRq prestamoRq) 
         throws BadRequestException {
         return ResponseEntity.ok(prestamoService.crearPrestamo(prestamoRq));
+    }
+
+    @Override
+    public ResponseEntity<RespuestaGenericaRs> actualizarPrestamo(
+        @RequestBody PrestamosActualizarRq prestamosActualizarRq
+    ) throws BadRequestException {
+        return ResponseEntity.ok(prestamoService.actualizarPrestamo(prestamosActualizarRq));
     }
 }

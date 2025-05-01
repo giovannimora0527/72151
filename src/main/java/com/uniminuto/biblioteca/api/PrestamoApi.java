@@ -2,6 +2,7 @@ package com.uniminuto.biblioteca.api;
 
 import com.uniminuto.biblioteca.model.PrestamoDto;
 import com.uniminuto.biblioteca.model.PrestamoRq;
+import com.uniminuto.biblioteca.model.PrestamosActualizarRq;
 import com.uniminuto.biblioteca.model.RespuestaGenericaRs;
 
 import java.util.List;
@@ -29,10 +30,10 @@ public interface PrestamoApi {
     )
     ResponseEntity<List<PrestamoDto>> listarPrestamos() throws BadRequestException;
 
-
     
     /**
      * Método para crear préstamo en la bd.
+     * @param PrestamoRq entrada.
      * @return Respuesta del servicio.
      * @throws BadRequestException excepción.
      */
@@ -44,4 +45,21 @@ public interface PrestamoApi {
     )
     ResponseEntity<RespuestaGenericaRs> crearPrestamo(@RequestBody PrestamoRq prestamoRq) 
         throws BadRequestException;
+        
+
+    /**
+     * Método para actualizar préstamo en la bd.
+     * @param PrestamosActualizarRq entrada.
+     * @return Respuesta del servicio.
+     * @throws BadRequestException excepción.
+     */
+    @RequestMapping(
+        value = "/actualizar",
+        method = RequestMethod.POST,
+        produces = "application/json",
+        consumes = "application/json"
+    )
+    ResponseEntity<RespuestaGenericaRs> actualizarPrestamo(
+        @RequestBody PrestamosActualizarRq prestamosActualizarRq
+    ) throws BadRequestException;
 }

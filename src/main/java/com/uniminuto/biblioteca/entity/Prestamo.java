@@ -51,7 +51,7 @@ public class Prestamo {
     @Column(name = "estado", columnDefinition = "ENUM('PRESTADO', 'VENCIDO', 'DEVUELTO')")
     private EstadoPrestamo estado;
 
-    // ========== Lógica para calcular el estado automáticamente ==========
+    //  Lógica para calcular el estado automáticamente
     @PrePersist
     @PreUpdate
     @PostLoad 

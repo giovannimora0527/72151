@@ -5,6 +5,7 @@ import com.uniminuto.biblioteca.entity.Prestamo;
 import com.uniminuto.biblioteca.entity.Prestamo.EstadoPrestamo;
 import com.uniminuto.biblioteca.model.PrestamoDto;
 import com.uniminuto.biblioteca.model.PrestamoRq;
+import com.uniminuto.biblioteca.model.PrestamosActualizarRq;
 import com.uniminuto.biblioteca.model.RespuestaGenericaRs;
 import com.uniminuto.biblioteca.repository.PrestamoRepository;
 import com.uniminuto.biblioteca.services.LibroService;
@@ -71,6 +72,19 @@ public class PrestamoServiceImpl  implements PrestamoService  {
 
     @Override
     public RespuestaGenericaRs crearPrestamo(PrestamoRq prestamoRq) throws BadRequestException {
+        // Validar usuario
+        if (prestamoRq.getIdUsuario() == null) {
+            throw new BadRequestException("El id del usuario es obligatorio.");
+        }
+        // Validar libro
+        if (prestamoRq.getIdLibro() == null) {
+            throw new BadRequestException("El id del libro es obligatorio.");
+        }
+
+        if (prestamoRq.getFechaDevolucion() == null) {
+            throw new BadRequestException("La fecha de entrega es obligatoria.");
+        }
+
         // Validar que el usuario existe
         if (!usuarioService.existeUsuario(prestamoRq.getIdUsuario())) {
             throw new BadRequestException("Usuario no encontrado.");
@@ -97,5 +111,33 @@ public class PrestamoServiceImpl  implements PrestamoService  {
         prestamoRepository.save(prestamo);
 
         return new RespuestaGenericaRs("Préstamo creado exitosamente.");
+    }
+
+    @Override
+    @Transactional
+    public RespuestaGenericaRs actualizarPrestamo(PrestamosActualizarRq prestamosActualizarRq) throws BadRequestException {
+        // Validar ID
+        if (prestamosActualizarRq.getIdPrestamo() == null) {
+            throw new BadRequestException("El ID del préstamo es obligatorio.");
+        }
+
+        if (prestamosActualizarRq.getFechaEntrega() == null) {
+            throw new BadRequestException("La fecha de entrega es obligatoria.");
+        }
+
+
+        Prestamo prestamo = prestamoRepository.findById(prestamosActualizarRq.getIdPrestamo())
+            .orElseThrow(() -> new BadRequestException("Préstamo no encontrado."));
+
+        // Validar fecha de entrega
+        if (prestamosActualizarRq.getFechaEntrega().isBefore(prestamo.getFechaPrestamo().toLocalDate())) {
+            throw new BadRequestException("La fecha de entrega no puede ser anterior al préstamo.");
+        }
+
+        // Actualizar y guardar
+        prestamo.setFechaEntrega(prestamosActualizarRq.getFechaEntrega());
+        prestamoRepository.save(prestamo); // @PreUpdate actualiza el estado
+
+        return new RespuestaGenericaRs("Préstamo actualizado exitosamente.");
     }
 }
