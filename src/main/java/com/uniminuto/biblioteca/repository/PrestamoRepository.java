@@ -16,7 +16,8 @@ import org.springframework.data.repository.query.Param;
 @Repository
 public interface PrestamoRepository  extends
                 JpaRepository<Prestamo, Integer> {
-
+                    
+    // Esta consulta cuenta cuántos préstamos activos existen
     @Query("SELECT COUNT(p) FROM Prestamo p WHERE p.libro.idLibro = :idLibro AND p.fechaEntrega IS NULL")
     int countPrestamosActivosPorLibro(@Param("idLibro") Integer idLibro);
 }
