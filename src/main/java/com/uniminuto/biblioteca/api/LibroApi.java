@@ -106,5 +106,17 @@ public interface LibroApi {
             method = RequestMethod.POST)
     ResponseEntity<RespuestaGenericaRs> crearLibro(@RequestBody LibroRq LibroRq)
             throws BadRequestException;
-    
+
+
+    /**
+     * Lista los libros con existencias disponibles (existencias >= 1).
+     * @return Lista de libros disponibles.
+     * @throws BadRequestException excepcion.
+     */
+    @RequestMapping(value = "/listar-disponibles",
+            produces = {"application/json"},
+            consumes = {"application/json"},
+            method = RequestMethod.GET)
+    ResponseEntity<List<Libro>> listarLibrosDisponibles() throws BadRequestException;
+
 }

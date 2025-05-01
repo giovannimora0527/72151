@@ -126,4 +126,28 @@ public class LibroServiceImpl implements LibroService {
         libro.setExistencias(libroRq.getExistencias());
         return libro;
     }
+
+
+    @Override
+    public List<Libro> listarLibrosDisponibles() throws BadRequestException {
+        return this.libroRepository.findByExistenciasGreaterThanEqual(1);
+    }
+
+    @Override
+    public RespuestaGenericaRs actualizarExistencias(Integer libroId, Integer nuevasExistencias) throws BadRequestException {
+        Optional<Libro> optLibro = this.libroRepository.findById(libroId);
+        if (!optLibro.isPresent()) {
+            throw new BadRequestException("No se encuentra el libro con el id = " + libroId);
+        }
+        if (nuevasExistencias == null || nuevasExistencias < 0) {
+            throw new BadRequestException("El valor de existencias no es válido.");
+        }
+        Libro libro = optLibro.get();
+        libro.setExistencias(nuevasExistencias);
+        this.libroRepository.save(libro);
+
+        RespuestaGenericaRs respuesta = new RespuestaGenericaRs();
+        respuesta.setMessage("Existencias actualizadas correctamente");
+        return respuesta;
+    }
 }

@@ -61,4 +61,19 @@ public interface LibroService {
      * @throws BadRequestException 
      */
     RespuestaGenericaRs crearLibro(LibroRq LibroRq) throws BadRequestException;
+
+    /**
+     * Lista los libros con existencias disponibles (existencias >= 1).
+     * @return Lista de libros disponibles.
+     * @throws BadRequestException excepcion.
+     */
+    List<Libro> listarLibrosDisponibles() throws BadRequestException;
+    /**
+     * Actualiza las existencias de un libro.
+     * @param libroId Id del libro.
+     * @param nuevasExistencias Nuevo valor de existencias.
+     * @return Respuesta del servicio.
+     * @throws BadRequestException excepcion.
+     */
+    RespuestaGenericaRs actualizarExistencias(Integer libroId, Integer nuevasExistencias) throws BadRequestException;
 }
