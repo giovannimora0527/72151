@@ -97,7 +97,7 @@ public class PrestamoServiceImpl implements PrestamoService {
         Usuario usuario = optUsu.get();
         Libro libro = optLib.get();
 
-        prestamo.setFechaPrestamo(prestamoRq.getFechaPrestamo());
+        prestamo.setFechaPrestamo(LocalDateTime.now());
         prestamo.setFechaDevolucion( prestamoRq.getFechaDevolucion() );
         prestamo.setLibro(libro);
         prestamo.setUsuario(usuario);
@@ -109,6 +109,49 @@ public class PrestamoServiceImpl implements PrestamoService {
 
     @Override
     public RespuestaGenericaRs actualizarPrestamo(Prestamo prestamo) throws BadRequestException {
-        return null;
+
+        Optional<Prestamo> optUser = this.prestamoRepository
+                .findById(prestamo.getPrestamoId());
+        if (!optUser.isPresent()) {
+            throw new BadRequestException("No existe el Prestamo.");
+        }
+
+//        // 1. Validar que la fecha de préstamo no sea anterior a la fecha actual
+//        if (fechaPrestamo.isBefore(fechaActual)) {
+//            throw new BadRequestException("La fecha de préstamo no puede ser anterior a la fecha actual");
+//        }
+//
+//        // 2. Validar que la fecha de devolución sea posterior a la fecha de préstamo
+//        if (prestamoRq.getFechaDevolucion() == null ||
+//                !prestamoRq.getFechaDevolucion().isAfter(fechaPrestamo)) {
+//            throw new BadRequestException("La fecha de devolución debe ser posterior a la fecha de préstamo");
+//        }
+
+
+        Prestamo prestamoActual = optUser.get();
+        RespuestaGenericaRs rta = new RespuestaGenericaRs();
+        rta.setMessage("Se ha actualizado el registro satisfactoriamente");
+        if (!compararObjetosUsuarioActualizar(prestamoActual, prestamo)) {
+            return rta;
+        }
+
+        prestamoActual.setFechaPrestamo(prestamo.getFechaPrestamo());
+        prestamoActual.setFechaDevolucion(prestamo.getFechaDevolucion());
+        prestamoActual.setLibro(prestamo.getLibro());
+        prestamoActual.setUsuario(prestamo.getUsuario());
+        prestamoActual.setEstado(prestamo.getEstado());
+        prestamoActual.setFechaEntrega(prestamo.getFechaEntrega());
+
+        this.prestamoRepository.save(prestamoActual);
+        return rta;
+    }
+
+    private boolean compararObjetosUsuarioActualizar(Prestamo prestamoActual, Prestamo prestamoFront) {
+        return !prestamoActual.getFechaPrestamo().equals(prestamoFront.getFechaPrestamo())
+                || !prestamoActual.getFechaDevolucion().equals(prestamoFront.getFechaDevolucion())
+                || !prestamoActual.getLibro().equals(prestamoFront.getLibro())
+                || !prestamoActual.getEstado().equals(prestamoFront.getEstado())
+                || !prestamoActual.getFechaEntrega().equals(prestamoFront.getFechaEntrega())
+                || !prestamoActual.getUsuario().equals(prestamoFront.getUsuario());
     }
 }
