@@ -62,4 +62,5 @@ public interface UsuarioApi {
             method = RequestMethod.POST)
     ResponseEntity<RespuestaGenericaRs> actualizarUsuario(@RequestBody Usuario usuario)
             throws BadRequestException;
+
 }

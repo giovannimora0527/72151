@@ -7,8 +7,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.Data;
 
@@ -42,9 +40,8 @@ public class Autor implements Serializable {
     /**
      * Nacionalidad del autor.
      */
-    @ManyToOne
-    @JoinColumn(name = "nacionalidad_id", nullable = false)
-    private Nacionalidad nacionalidad;
+    @Column(name = "nacionalidad", length = 50)
+    private String nacionalidad;
     
     /**
      * Fecha de nacimiento del autor.

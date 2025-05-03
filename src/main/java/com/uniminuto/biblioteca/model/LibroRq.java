@@ -8,11 +8,11 @@ import lombok.Data;
  */
 @Data
 public class LibroRq {
-
-    private Integer anioPublicacion;
+    private Integer id; // Se agrega el ID para la actualización
+    private String titulo;
     private Integer autorId;
     private Integer categoriaId;
     private Integer existencias;
-    private String titulo;
-
+    private Integer anioPublicacion;
+     private String fechaEntrega;
 }

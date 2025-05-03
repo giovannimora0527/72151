@@ -49,4 +49,15 @@ public class Libro implements Serializable {
     /** Cantidad de ejemplares disponibles del libro. */
     @Column(name = "existencias", nullable = false)
     private Integer existencias;
+    
+     private boolean disponible; // Verifica que esta propiedad esté presente
+
+    // Getters y Setters
+    public boolean isDisponible() {
+        return disponible;
+    }
+
+    public void setDisponible(boolean disponible) {
+        this.disponible = disponible;
+    }
 }

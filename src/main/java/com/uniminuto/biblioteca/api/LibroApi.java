@@ -107,4 +107,11 @@ public interface LibroApi {
     ResponseEntity<RespuestaGenericaRs> crearLibro(@RequestBody LibroRq LibroRq)
             throws BadRequestException;
     
+    @RequestMapping(value = "/actualizar-libro",
+    produces = {"application/json"},
+    consumes = {"application/json"},
+    method = RequestMethod.PUT)
+ResponseEntity<RespuestaGenericaRs> actualizarLibro(@RequestBody LibroRq libroRq)
+    throws BadRequestException;
+   
 }
