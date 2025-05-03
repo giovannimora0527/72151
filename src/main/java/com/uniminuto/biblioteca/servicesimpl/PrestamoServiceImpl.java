@@ -63,13 +63,14 @@ public class PrestamoServiceImpl implements PrestamoService {
             throw new BadRequestException("La fecha de devolución debe ser posterior a la fecha de préstamo");
         }
 
-        var libroOpt = libroRepository.findById(prestamoRq.getLibroId());
+
 
         Prestamo prestamoGuardar = this.convertirPrestamoRqToPrestamo(prestamoRq);
 
         // Guardar en la base de datos
         this.prestamoRepository.save(prestamoGuardar);
 
+        var libroOpt = libroRepository.findById(prestamoRq.getLibroId());
         // Restar 1 a las existencias de libro
         Integer nuevaExistencia = libroOpt.get().getExistencias() - 1;
         libroService.actualizarExistencias(libroOpt.get().getIdLibro(), nuevaExistencia);
@@ -116,16 +117,10 @@ public class PrestamoServiceImpl implements PrestamoService {
             throw new BadRequestException("No existe el Prestamo.");
         }
 
-//        // 1. Validar que la fecha de préstamo no sea anterior a la fecha actual
-//        if (fechaPrestamo.isBefore(fechaActual)) {
-//            throw new BadRequestException("La fecha de préstamo no puede ser anterior a la fecha actual");
-//        }
-//
-//        // 2. Validar que la fecha de devolución sea posterior a la fecha de préstamo
-//        if (prestamoRq.getFechaDevolucion() == null ||
-//                !prestamoRq.getFechaDevolucion().isAfter(fechaPrestamo)) {
-//            throw new BadRequestException("La fecha de devolución debe ser posterior a la fecha de préstamo");
-//        }
+        // 1. Validar que la fecha de préstamo no sea anterior a la fecha actual
+        if (prestamo.getFechaEntrega().isBefore(prestamo.getFechaPrestamo())) {
+            throw new BadRequestException("La fecha de entrega del libro no puede ser anterior a la fecha del prestamo");
+        }
 
 
         Prestamo prestamoActual = optUser.get();
@@ -142,6 +137,10 @@ public class PrestamoServiceImpl implements PrestamoService {
         prestamoActual.setEstado(prestamo.getEstado());
         prestamoActual.setFechaEntrega(prestamo.getFechaEntrega());
 
+        var libroOpt = libroRepository.findById(prestamo.getLibro().getIdLibro());
+        Integer nuevaExistencia = libroOpt.get().getExistencias() + 1;
+        libroService.actualizarExistencias(libroOpt.get().getIdLibro(), nuevaExistencia);
+
         this.prestamoRepository.save(prestamoActual);
         return rta;
     }
@@ -151,7 +150,7 @@ public class PrestamoServiceImpl implements PrestamoService {
                 || !prestamoActual.getFechaDevolucion().equals(prestamoFront.getFechaDevolucion())
                 || !prestamoActual.getLibro().equals(prestamoFront.getLibro())
                 || !prestamoActual.getEstado().equals(prestamoFront.getEstado())
-                || !prestamoActual.getFechaEntrega().equals(prestamoFront.getFechaEntrega())
+                || !java.util.Objects.equals(prestamoActual.getFechaEntrega(), prestamoFront.getFechaEntrega())
                 || !prestamoActual.getUsuario().equals(prestamoFront.getUsuario());
     }
 }
