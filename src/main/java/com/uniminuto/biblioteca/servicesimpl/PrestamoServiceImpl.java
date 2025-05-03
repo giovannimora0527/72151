@@ -60,7 +60,7 @@ public class PrestamoServiceImpl implements PrestamoService {
         // 2. Validar que la fecha de devolución sea posterior a la fecha de préstamo
         if (prestamoRq.getFechaDevolucion() == null ||
             !prestamoRq.getFechaDevolucion().isAfter(fechaPrestamo)) {
-            throw new BadRequestException("La fecha de devolución debe ser posterior a la fecha de préstamo");
+            throw new BadRequestException("La fecha de devolución debe ser al menos 1 dia despues de la fecha actual");
         }
 
 
