@@ -91,6 +91,19 @@ public interface LibroApi {
             @RequestParam Integer anioIni,
             @RequestParam Integer anioFin)
             throws BadRequestException;
+
+    /**
+     * Metodo para listar los libros disponibles
+     *
+     * @return Lista de libros.
+     * @throws BadRequestException excepcion.
+     */
+    @RequestMapping(value = "/disponibles",
+            produces = {"application/json"},
+            consumes = {"application/json"},
+            method = RequestMethod.GET)
+    ResponseEntity<List<Libro>> obtenerLibrosDisponibles()
+            throws BadRequestException;
     
    
     /**

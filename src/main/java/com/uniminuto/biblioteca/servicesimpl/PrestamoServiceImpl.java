@@ -134,6 +134,11 @@ public class PrestamoServiceImpl  implements PrestamoService  {
             throw new BadRequestException("La fecha de entrega no puede ser anterior al préstamo.");
         }
 
+        // Validar fecha de entrega
+        if (prestamosActualizarRq.getFechaEntrega().isAfter(LocalDate.now())) {
+            throw new BadRequestException("La fecha de entrega no puede ser en el futuro.");
+        }
+
         // Actualizar y guardar
         prestamo.setFechaEntrega(prestamosActualizarRq.getFechaEntrega());
         prestamoRepository.save(prestamo); // @PreUpdate actualiza el estado

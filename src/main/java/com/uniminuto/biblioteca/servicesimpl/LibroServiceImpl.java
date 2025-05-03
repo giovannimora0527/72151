@@ -13,9 +13,11 @@ import com.uniminuto.biblioteca.services.LibroService;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 
 /**
  *
@@ -134,5 +136,16 @@ public class LibroServiceImpl implements LibroService {
         Libro libro = this.obtenerLibroId(idLibro);
         int prestamosActivos = prestamoRepository.countPrestamosActivosPorLibro(idLibro);
         return libro.getExistencias() > prestamosActivos;
+    }
+
+    @Override
+    public List<Libro> ObtenerlibrosDisponibles() throws BadRequestException {
+        List<Libro> libros = libroRepository.findAll();
+        return libros.stream()
+                     .filter(libro -> {
+                         int prestamosActivos = prestamoRepository.countPrestamosActivosPorLibro(libro.getIdLibro());
+                         return libro.getExistencias() > prestamosActivos ;
+                     })
+                     .collect(Collectors.toList());
     }
 }
