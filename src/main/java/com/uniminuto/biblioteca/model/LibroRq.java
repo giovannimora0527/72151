@@ -14,5 +14,5 @@ public class LibroRq {
     private Integer categoriaId;
     private Integer existencias;
     private Integer anioPublicacion;
-     private String fechaEntrega;
+    private String fechaEntrega;
 }

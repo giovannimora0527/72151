@@ -1,10 +1,11 @@
+
 package com.uniminuto.biblioteca.model;
 
 import lombok.Data;
 
 /**
  *
- * @author lmora
+ * @author crist
  */
 @Data
 public class UsuarioRq {
