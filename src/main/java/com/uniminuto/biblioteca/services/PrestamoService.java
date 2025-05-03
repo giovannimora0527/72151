@@ -1,6 +1,5 @@
 package com.uniminuto.biblioteca.services;
 
-import com.uniminuto.biblioteca.entity.Prestamo;
 import com.uniminuto.biblioteca.model.PrestamoDto;
 import com.uniminuto.biblioteca.model.PrestamoRq;
 import com.uniminuto.biblioteca.model.PrestamosActualizarRq;
