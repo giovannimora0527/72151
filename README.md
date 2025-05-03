@@ -1,2 +1,2 @@
 # 72151
-Taller Springboot para Uniminuto Programación web - Critian Pardo
+Taller Springboot para Uniminuto Porgramacion web

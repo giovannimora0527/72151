@@ -18,7 +18,7 @@ public class Autor implements Serializable {
      * Id serializable.
      */
     private static final long serialVersionUID = 1L;
-
+    
     /**
      * Identificador único del autor.
      */
@@ -26,20 +26,20 @@ public class Autor implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_autor")
     private Integer autorId;
-
+    
     /**
      * Nombre del autor.
      */
     @Column(name = "nombre", nullable = false, length = 100)
     private String nombre;
-
+    
     /**
      * Nacionalidad del autor.
      */
     @ManyToOne
     @JoinColumn(name = "id_nacionalidad", nullable = false)
     private Nacionalidad nacionalidad;
-
+    
     /**
      * Fecha de nacimiento del autor.
      */

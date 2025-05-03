@@ -1,4 +1,3 @@
-
 package com.uniminuto.biblioteca.servicesimpl;
 
 import com.uniminuto.biblioteca.entity.Autor;
@@ -47,7 +46,7 @@ public class AutorServiceImpl implements AutorService {
         if (listaAutores.isEmpty()) {
             throw new BadRequestException("No existen autores con esa nacionalidad.");
         }
-
+        
         return listaAutores;
     }
 

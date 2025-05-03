@@ -14,12 +14,12 @@ import org.springframework.stereotype.Repository;
 public interface AutorRepository extends
         JpaRepository<Autor, Integer>  {
     List<Autor> findByFechaNacimientoBetween(LocalDate fechaNacimientoInicial,
-                                             LocalDate fechaNacimientoFin);
-
+            LocalDate fechaNacimientoFin);
+    
     List<Autor> findByNacionalidad(String nacionalidad);
-
+    
     List<Autor> findAllByOrderByFechaNacimientoAsc();
-
+    
     List<Autor> findAllByOrderByFechaNacimientoDesc();
 
     boolean existsByNombre(String nombre);

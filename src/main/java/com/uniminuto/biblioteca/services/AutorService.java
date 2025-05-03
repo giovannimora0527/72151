@@ -15,9 +15,9 @@ import org.apache.coyote.BadRequestException;
  */
 public interface AutorService {
     List<Autor> obtenerListadoAutores();
-
+    
     List<Autor> obtenerListadoAutoresPorNacionalidad(String nacionalidad) throws BadRequestException;
-
+    
     Autor obtenerAutorPorId(Integer autorId) throws BadRequestException;
 
     RespuestaGenericaRs crearAutor(AutorRq autorRq) throws BadRequestException;

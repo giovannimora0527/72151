@@ -3,7 +3,10 @@ package com.uniminuto.biblioteca.repository;
 import com.uniminuto.biblioteca.entity.Autor;
 import com.uniminuto.biblioteca.entity.Libro;
 import java.util.List;
+import java.util.Queue;
+
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -20,7 +23,7 @@ public interface LibroRepository extends
      * @return Lista de libros.
      */
     List<Libro> findByAutor(Autor autor);
-    
+
     /**
      * Busca un libro por su nombre.
      * @param nombreLibro Nombre del libro a buscar.
@@ -40,5 +43,11 @@ public interface LibroRepository extends
      * Consulta el libro por titulo.
      */
     boolean existsByTitulo(String titulo);
-    
+
+    /**
+     * Lista los libros con existencias mayores o iguales a 1.
+     * @return Lista de libros disponibles.
+     */
+    List<Libro> findByExistenciasGreaterThanEqual(Integer existencias);
+
 }

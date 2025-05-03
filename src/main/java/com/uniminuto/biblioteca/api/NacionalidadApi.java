@@ -1,4 +1,3 @@
-
 package com.uniminuto.biblioteca.api;
 
 import com.uniminuto.biblioteca.entity.Nacionalidad;
@@ -10,10 +9,20 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.util.List;
 
-@CrossOrigin(origins = "*")
-@RequestMapping("/nacionalidad")
+/**
+ * Interfaz que define la API para la gestión de nacionalidades en la biblioteca.
+ * Proporciona métodos para listar nacionalidades.
+ */
+@CrossOrigin(origins = "*") // Permite solicitudes desde cualquier origen
+@RequestMapping("/nacionalidad") // Ruta base para los endpoints de nacionalidad
 public interface NacionalidadApi {
 
+    /**
+     * Lista todas las nacionalidades registradas en la base de datos.
+     *
+     * @return ResponseEntity con la lista de nacionalidades.
+     * @throws BadRequestException si ocurre un error en la solicitud.
+     */
     @RequestMapping(value = "/listar",
             produces = {"application/json"},
             consumes = {"application/json"},
