@@ -33,6 +33,7 @@ public interface AutorApi {
      /**
      * Metodo para listar los autores registrados en bd.
      *
+     * @param autorId
      * @return Lista de autores.
      * @throws BadRequestException excepcion.
      */
@@ -40,7 +41,7 @@ public interface AutorApi {
             produces = {"application/json"},
             consumes = {"application/json"},
             method = RequestMethod.GET)
-    ResponseEntity<Autor> listarAutorPorId(@RequestParam Integer autorIds)
+    ResponseEntity<Autor> listarAutorPorId(@RequestParam Integer autorId)
             throws BadRequestException;
 
 
