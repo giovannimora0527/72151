@@ -2,10 +2,10 @@ package com.uniminuto.biblioteca.apicontroller;
 
 import com.uniminuto.biblioteca.api.LibroApi;
 import java.util.List;
-import java.util.Optional;
-
 import org.springframework.web.bind.annotation.RestController;
 import com.uniminuto.biblioteca.entity.Libro;
+import com.uniminuto.biblioteca.model.LibroRq;
+import com.uniminuto.biblioteca.model.RespuestaGenericaRs;
 import com.uniminuto.biblioteca.services.LibroService;
 import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,32 +18,44 @@ import org.springframework.http.ResponseEntity;
 @RestController
 public class LibroApiController implements LibroApi {
 
-  @Autowired
-  private LibroService libroService;
+    @Autowired
+    private LibroService libroService;
 
-  @Override
-  public ResponseEntity<List<Libro>> listarLibros() throws BadRequestException {
-    return ResponseEntity.ok(this.libroService.listarLibros());
-  }
+    @Override
+    public ResponseEntity<List<Libro>> listarLibros()
+            throws BadRequestException {
+        return ResponseEntity.ok(this.libroService.listarLibros());
+    }
 
-  @Override
-  public ResponseEntity<Libro> obtenerLibroPorId(Integer libroId) throws BadRequestException {
-    return ResponseEntity.ok(this.libroService.obtenerLibroId(libroId));
-  }
+    @Override
+    public ResponseEntity<Libro> obtenerLibroPorId(Integer libroId)
+            throws BadRequestException {
+        return ResponseEntity.ok(this.libroService.obtenerLibroId(libroId));
+    }
 
-  @Override
-  public ResponseEntity<List<Libro>> obtenerLibroPorAutor(Integer autorId) throws BadRequestException {
-    return ResponseEntity.ok(this.libroService.obtenerLibroPorAutor(autorId));
-  }
+    @Override
+    public ResponseEntity<List<Libro>>
+            obtenerLibroPorAutor(Integer autorId) throws BadRequestException {
+        return ResponseEntity.ok(this.libroService.obtenerLibrosPorAutor(autorId));
+    }
 
-  @Override
-  public ResponseEntity<Optional<Libro>> obtenerLibroPorTitulo(String titulo) throws BadRequestException {
-    return ResponseEntity.ok(this.libroService.obtenerLibroPorTitulo(titulo));
-  }
+    @Override
+    public ResponseEntity<Libro> obtenerLibroPorNombre(String nombreLibro)
+            throws BadRequestException {
+        return ResponseEntity.ok(this.libroService.obtenerLibroPorNombre(nombreLibro));
+    }
 
-  @Override
-  public ResponseEntity<List<Libro>> obtenerLibroPorRangoDeAnios(int fechaInicio, int fechaFin)
-      throws BadRequestException {
-    return ResponseEntity.ok(this.libroService.listarLibrosPorFecha(fechaInicio, fechaFin));
-  }
+    @Override
+    public ResponseEntity<List<Libro>> obtenerLibroPorFechaPublicacion(
+            Integer anioIni, Integer anioFin)
+            throws BadRequestException {
+        return ResponseEntity.ok(this.libroService
+                .obtenerLibroXRangoPublicacion(anioIni, anioFin));
+    }
+
+    @Override
+    public ResponseEntity<RespuestaGenericaRs> crearLibro(LibroRq LibroRq) throws BadRequestException {
+        return ResponseEntity.ok(this.libroService.crearLibro(LibroRq));
+    }
+
 }

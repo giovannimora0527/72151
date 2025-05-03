@@ -1,7 +1,7 @@
 package com.uniminuto.biblioteca.entity;
 
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -12,15 +12,16 @@ import lombok.Data;
 
 /**
  *
- * @author Angulo
+ * @author lmora
+ */
+/**
+ * Entidad que representa la tabla "usuarios" en la base de datos.
  */
 @Data
 @Entity
 @Table(name = "usuarios")
 public class Usuario implements Serializable {
-    /**
-     * Id serializable.
-     */
+
     private static final long serialVersionUID = 1L;
 
     /**
@@ -28,8 +29,8 @@ public class Usuario implements Serializable {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_usuario")
-    private Integer usuarioId;
+    @Column(name = "id_usuario", nullable = false)
+    private Integer idUsuario;
 
     /**
      * Nombre del usuario.
@@ -38,20 +39,26 @@ public class Usuario implements Serializable {
     private String nombre;
 
     /**
-     * Correo del usuario.
+     * Correo electrónico del usuario (debe ser único).
      */
-    @Column(name = "correo", nullable = false, length = 100)
+    @Column(name = "correo", nullable = false, length = 100, unique = true)
     private String correo;
 
     /**
-     * Telefono del usuario.
+     * Número de teléfono del usuario (opcional).
      */
     @Column(name = "telefono", length = 20)
     private String telefono;
 
     /**
-     * Fecha de registro del usuario.
+     * Fecha de registro del usuario (se asigna automáticamente).
      */
-    @Column(name = "fecha_registro")
-    private LocalDate fechaRegistro;
+    @Column(name = "fecha_registro", nullable = false)
+    private LocalDateTime fechaRegistro;
+    
+    /**
+     * Estado del usuario Activo/Inactivo.
+     */
+    @Column(name = "activo")
+    private Boolean activo;
 }
