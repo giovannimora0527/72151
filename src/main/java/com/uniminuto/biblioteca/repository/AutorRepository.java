@@ -3,7 +3,6 @@ package com.uniminuto.biblioteca.repository;
 import com.uniminuto.biblioteca.entity.Autor;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -22,8 +21,6 @@ public interface AutorRepository extends
     List<Autor> findAllByOrderByFechaNacimientoAsc();
     
     List<Autor> findAllByOrderByFechaNacimientoDesc();
-       
-    Optional<Autor> findByNombreIgnoreCase (String nombre);
 
-
+    boolean existsByNombre(String nombre);
 }

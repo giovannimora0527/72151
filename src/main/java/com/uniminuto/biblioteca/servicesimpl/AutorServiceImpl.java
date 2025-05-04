@@ -1,16 +1,22 @@
 package com.uniminuto.biblioteca.servicesimpl;
 
 import com.uniminuto.biblioteca.entity.Autor;
+import com.uniminuto.biblioteca.entity.Nacionalidad;
+import com.uniminuto.biblioteca.entity.Usuario;
+import com.uniminuto.biblioteca.model.AutorRq;
+import com.uniminuto.biblioteca.model.RespuestaGenericaRs;
 import com.uniminuto.biblioteca.repository.AutorRepository;
+import com.uniminuto.biblioteca.repository.NacionalidadRepository;
 import com.uniminuto.biblioteca.services.AutorService;
-import java.util.Comparator;
+
 import java.util.List;
 import java.util.Optional;
+
+
+import com.uniminuto.biblioteca.services.NacionalidadService;
 import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.server.ResponseStatusException;
 
 /**
  *
@@ -21,6 +27,9 @@ public class AutorServiceImpl implements AutorService {
 
     @Autowired
     private AutorRepository autorRepository;
+
+    @Autowired
+    private NacionalidadRepository nacionalidadRepository;
 
     @Override
     public List<Autor> obtenerListadoAutores() {
@@ -49,32 +58,73 @@ public class AutorServiceImpl implements AutorService {
         }
         return optAutor.get();
     }
-    
-    @Override
-    public Autor crearAutor(Autor autor) {   
-        Optional<Autor> existente = autorRepository.findByNombreIgnoreCase(autor.getNombre());
-        if (existente.isPresent()) {
-            throw new ResponseStatusException (HttpStatus.BAD_REQUEST, "El autor con el nombre '" + autor.getNombre() + "' ya existe.");
-        }   
-        return autorRepository.save(autor);
-}
 
     @Override
-    public Autor actualizarAutor(Integer id, Autor autor)  {
-    Optional<Autor> existente = autorRepository.findById(id);
-    if (!existente.isPresent()) {
-        throw new RuntimeException("Autor no encontrado con id " + id);
+    public RespuestaGenericaRs crearAutor(AutorRq autorRq) throws BadRequestException {
+        // Paso 1. - en la bd si el libro existe por nombre
+        // Paso 2. SI ESTA => lanzo el error
+        // Paso 3. SINO esta Convertir mi objeto entrada rq a entidad Libro
+        // Paso 4. Guardo el registro
+        // Paso 5. Devolver una respuesta
+        if (this.autorRepository.existsByNombre(autorRq.getNombre())) {
+            throw new BadRequestException("El Autor se encuentra ya registrado");
+        }
+
+        Autor autorGuardar = this.convertirAutorRqToAutor(autorRq);
+        this.autorRepository.save(autorGuardar);
+        RespuestaGenericaRs rta = new RespuestaGenericaRs();
+        rta.setMessage("Se ha guardado el Autor satisfactoriamente");
+        return rta;
     }
-    
-    Optional<Autor> autorConMismoNombre = autorRepository.findByNombreIgnoreCase(autor.getNombre());
-    if (autorConMismoNombre.isPresent() && !autorConMismoNombre.get().getAutorId().equals(id)) {
-        throw new RuntimeException("Ya existe otro autor con el nombre '" + autor.getNombre() + "'.");
+
+    private Autor convertirAutorRqToAutor(AutorRq autorRq) throws BadRequestException {
+        Autor autor = new Autor();
+        autor.setFechaNacimiento(autorRq.getFechaNacimiento());
+        Optional<Nacionalidad> optCat = this.nacionalidadRepository.findById(autorRq.getNacionalidadId());
+        if (!optCat.isPresent()) {
+            throw new BadRequestException("No existe la Nacionalidad");
+        }
+        Nacionalidad nacionalidad = optCat.get();
+        autor.setFechaNacimiento(autorRq.getFechaNacimiento());
+        autor.setNombre(autorRq.getNombre());
+        autor.setNacionalidad(nacionalidad);
+        return autor;
     }
-    
-    Autor autorExistente = existente.get();
-    autorExistente.setNombre(autor.getNombre());
-    autorExistente.setNacionalidad(autor.getNacionalidad());
-    autorExistente.setFechaNacimiento(autor.getFechaNacimiento());
-    return autorRepository.save(autorExistente);
-}
+
+
+    @Override
+    public RespuestaGenericaRs actualizarAutor(Autor autor) throws BadRequestException {
+        Optional<Autor> optUser = this.autorRepository
+                .findById(autor.getAutorId());
+        if (!optUser.isPresent()) {
+            throw new BadRequestException("No existe el Autor.");
+        }
+
+        Autor autorActual = optUser.get();
+        RespuestaGenericaRs rta = new RespuestaGenericaRs();
+        rta.setMessage("Se ha actualizado el registro satisfactoriamente");
+        if (!compararObjetosUsuarioActualizar(autorActual, autor)) {
+            return rta;
+        }
+
+        if (!autorActual.getNombre().equals(autor.getNombre())) {
+            // El nombre cambio
+            if (this.autorRepository.existsByNombre(autor.getNombre())) {
+                throw new BadRequestException("El autor " + autor.getNombre() + ", existe en la bd. por favor verifique.");
+            }
+        }
+
+        autorActual.setNombre(autor.getNombre());
+        autorActual.setNacionalidad(autor.getNacionalidad());
+        autorActual.setFechaNacimiento(autor.getFechaNacimiento());
+        this.autorRepository.save(autorActual);
+        return rta;
+    }
+
+    private boolean compararObjetosUsuarioActualizar(Autor autorActual, Autor autorFront) {
+        return !autorActual.getNombre().equals(autorFront.getNombre())
+                || !autorActual.getNacionalidad().equals(autorFront.getNacionalidad())
+                || !autorActual.getFechaNacimiento().equals(autorFront.getFechaNacimiento());
+    }
+
 }
