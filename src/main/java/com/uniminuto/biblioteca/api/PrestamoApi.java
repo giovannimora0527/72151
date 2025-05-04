@@ -1,80 +1,73 @@
 package com.uniminuto.biblioteca.api;
 
-import com.uniminuto.biblioteca.entity.Usuario;
+import com.uniminuto.biblioteca.entity.Prestamo;
 import com.uniminuto.biblioteca.model.RespuestaGenericaRs;
-import com.uniminuto.biblioteca.model.UsuarioRq;
-import com.uniminuto.biblioteca.model.UsuarioRs;
+import com.uniminuto.biblioteca.model.PrestamoRq;
 import java.util.List;
 import org.apache.coyote.BadRequestException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestBody;
 
 /**
- *
- * @author lmora
- */
+ * @author MiguelRayo_853345
+ **/
 @CrossOrigin(origins = "*")
-@RequestMapping("/usuario")
-public interface UsuarioApi {
-
+@RequestMapping("/prestamo")
+public interface PrestamoApi {
     /**
-     * Metodo para listar los autores registrados en bd.
+     * Metodo para listar los prestamos registrados en bd.
      *
-     * @return Lista de autores.
+     * @return Lista de prestamos.
      * @throws BadRequestException excepcion.
      */
     @RequestMapping(value = "/listar",
             produces = {"application/json"},
             consumes = {"application/json"},
             method = RequestMethod.GET)
-    ResponseEntity<List<Usuario>> listarUsuarios()
+    ResponseEntity<List<Prestamo>> listarPrestamos()
             throws BadRequestException;
     
-    /**
-     * Metodo para listar los usuarios por id.
+     /**
+     * Metodo para listar los prestamos por id registrados en bd.
      *
-     * @param id correo a buscar.
-     * @return Lista de autores.
+     * @return Lista de prestamos.
      * @throws BadRequestException excepcion.
      */
-    @RequestMapping(value = "/listar-por-id",
+    @RequestMapping(value = "/listar-prestamo-id",
             produces = {"application/json"},
             consumes = {"application/json"},
             method = RequestMethod.GET)
-    ResponseEntity<Usuario> buscarUsuarioPorId(@RequestParam Integer usuarioId)
-            throws BadRequestException;
-
-    /**
-     * Metodo para listar los autores registrados en bd.
-     *
-     * @param correo correo a buscar.
-     * @return Lista de autores.
-     * @throws BadRequestException excepcion.
-     */
-    @RequestMapping(value = "/buscar-por-correo",
-            produces = {"application/json"},
-            consumes = {"application/json"},
-            method = RequestMethod.GET)
-    ResponseEntity<Usuario> buscarUsuarioPorEmail(
-            @RequestParam String correo)
-            throws BadRequestException;
-
-    @RequestMapping(value = "/guardar-usuario",
-            produces = {"application/json"},
-            consumes = {"application/json"},
-            method = RequestMethod.POST)
-    ResponseEntity<UsuarioRs> guardarUsuario(@RequestBody UsuarioRq usuario)
+    ResponseEntity<Prestamo> listarPrestamoPorId(@RequestParam Integer prestamoIds)
             throws BadRequestException;
     
-    @RequestMapping(value = "/actualizar-usuario",
+    /**
+     * Metodo para guardar los prestamos en bd.
+     *
+     * @return Respuesta generica.
+     * @throws BadRequestException excepcion.
+     */
+    @RequestMapping(value = "/guardar-prestamo",
             produces = {"application/json"},
             consumes = {"application/json"},
             method = RequestMethod.POST)
-    ResponseEntity<RespuestaGenericaRs> actualizarUsuario(@RequestBody Usuario usuario)
+    ResponseEntity<RespuestaGenericaRs> guardarPrestamo(@RequestBody PrestamoRq prestamo)
             throws BadRequestException;
-
+    
+    /**
+     * Metodo para actualizar los prestamos en bd.
+     *
+     * @return Respuesta generica.
+     * @throws BadRequestException excepcion.
+     */
+    @RequestMapping(value = "/actualizar-prestamo",
+            produces = {"application/json"},
+            consumes = {"application/json"},
+            method = RequestMethod.POST)
+    ResponseEntity<RespuestaGenericaRs> actualizarPrestamo(@RequestBody Prestamo prestamo)
+            throws BadRequestException;
+    
 }

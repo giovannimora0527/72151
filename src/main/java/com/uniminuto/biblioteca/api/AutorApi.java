@@ -1,6 +1,8 @@
 package com.uniminuto.biblioteca.api;
 
 import com.uniminuto.biblioteca.entity.Autor;
+import com.uniminuto.biblioteca.model.RespuestaGenericaRs;
+import com.uniminuto.biblioteca.model.AutorRq;
 import java.util.List;
 import org.apache.coyote.BadRequestException;
 import org.springframework.http.ResponseEntity;
@@ -8,6 +10,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestBody;
 
 /**
  *
@@ -41,7 +44,7 @@ public interface AutorApi {
             consumes = {"application/json"},
             method = RequestMethod.GET)
     ResponseEntity<List<Autor>> listarAutoresByNacionalidad(
-     @RequestParam String nacionalidad)
+     @RequestParam Integer nacionalidad)
             throws BadRequestException;
     
      /**
@@ -55,6 +58,20 @@ public interface AutorApi {
             consumes = {"application/json"},
             method = RequestMethod.GET)
     ResponseEntity<Autor> listarAutorPorId(@RequestParam Integer autorIds)
+            throws BadRequestException;
+    
+    @RequestMapping(value = "/guardar-autor",
+            produces = {"application/json"},
+            consumes = {"application/json"},
+            method = RequestMethod.POST)
+    ResponseEntity<RespuestaGenericaRs> guardarAutor(@RequestBody AutorRq autor)
+            throws BadRequestException;
+    
+    @RequestMapping(value = "/actualizar-autor",
+            produces = {"application/json"},
+            consumes = {"application/json"},
+            method = RequestMethod.POST)
+    ResponseEntity<RespuestaGenericaRs> actualizarAutor(@RequestBody Autor autor)
             throws BadRequestException;
     
 }

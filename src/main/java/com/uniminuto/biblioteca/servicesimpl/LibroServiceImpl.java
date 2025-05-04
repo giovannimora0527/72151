@@ -1,11 +1,14 @@
 package com.uniminuto.biblioteca.servicesimpl;
 
 import com.uniminuto.biblioteca.entity.Autor;
+import com.uniminuto.biblioteca.entity.Categoria;
 import com.uniminuto.biblioteca.entity.Libro;
+import com.uniminuto.biblioteca.model.LibroRq;
+import com.uniminuto.biblioteca.model.RespuestaGenericaRs;
+import com.uniminuto.biblioteca.repository.CategoriaRepository;
 import com.uniminuto.biblioteca.repository.LibroRepository;
 import com.uniminuto.biblioteca.services.AutorService;
 import com.uniminuto.biblioteca.services.LibroService;
-import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -25,10 +28,18 @@ public class LibroServiceImpl implements LibroService {
 
     @Autowired
     private AutorService autorService;
+    
+    @Autowired
+    private CategoriaRepository categoriaRepository;
 
     @Override
     public List<Libro> listarLibros() throws BadRequestException {
         return this.libroRepository.findAll();
+    }
+    
+    @Override
+    public List<Libro> obtenerLibrosDisponibles() {
+        return libroRepository.findLibrosDisponibles();
     }
 
     @Override
@@ -84,5 +95,42 @@ public class LibroServiceImpl implements LibroService {
         }
 
         return this.libroRepository.findByAnioPublicacionBetween(fechaInicio, fechaFin);
+    }
+
+    @Override
+    public RespuestaGenericaRs crearLibro(LibroRq libroRq) throws BadRequestException {
+       // Paso 1. - en la bd si el libro existe por nombre
+       // Paso 2. SI ESTA => lanzo el error
+       // Paso 3. SINO esta Convertir mi objeto entrada rq a entidad Libro
+       // Paso 4. Guardo el registro
+       // Paso 5. Devolver una respuesta
+       if (this.libroRepository.existsByTitulo(libroRq.getTitulo())) {
+           throw new BadRequestException("El libro se encuentra ya registrado");
+       }
+       
+       Libro libroGuardar = this.convertirLibroRqToLibro(libroRq);
+       this.libroRepository.save(libroGuardar);
+       RespuestaGenericaRs rta = new RespuestaGenericaRs();
+       rta.setMessage("Se ha guardado el libro satisfactoriamente");
+       return rta;
+    }
+    
+    private Libro convertirLibroRqToLibro(LibroRq libroRq) throws BadRequestException {
+        Libro libro = new Libro();
+        libro.setAnioPublicacion(libroRq.getAnioPublicacion());
+        
+        Autor autor = this.autorService.obtenerAutorPorId(libroRq.getAutorId());
+        
+        Optional<Categoria> optCat = this.categoriaRepository.findById(libroRq.getCategoriaId());
+        if (!optCat.isPresent()) {
+            throw new BadRequestException("No existe la categoria");
+        }
+        Categoria categoria = optCat.get();
+        
+        libro.setAutor(autor);
+        libro.setCategoria(categoria);
+        libro.setTitulo(libroRq.getTitulo());
+        libro.setExistencias(libroRq.getExistencias());
+        return libro;
     }
 }

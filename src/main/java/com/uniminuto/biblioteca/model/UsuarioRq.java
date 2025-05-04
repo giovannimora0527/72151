@@ -6,7 +6,7 @@ import lombok.Data;
  *
  * @author lmora
  */
-@Data
+@Data 
 public class UsuarioRq {
     private String nombre;
     private String correo;

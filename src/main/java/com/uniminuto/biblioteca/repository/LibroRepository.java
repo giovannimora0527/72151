@@ -4,6 +4,7 @@ import com.uniminuto.biblioteca.entity.Autor;
 import com.uniminuto.biblioteca.entity.Libro;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -11,8 +12,7 @@ import org.springframework.stereotype.Repository;
  * @author lmora
  */
 @Repository
-public interface LibroRepository extends
-        JpaRepository<Libro, Integer> {
+public interface LibroRepository extends JpaRepository<Libro, Integer> {
     
     /**
      * Obtiene la lista dado un autor.
@@ -35,5 +35,14 @@ public interface LibroRepository extends
      * @return Lista de libros que cumplen el criterio.
      */
     List<Libro> findByAnioPublicacionBetween(Integer anioIni, Integer anioFin);
+    
+    /**
+     * Consulta el libro por titulo.
+     */
+    boolean existsByTitulo(String titulo);
+    
+    @Query("SELECT l FROM Libro l WHERE l.existencias > 1 OR " +
+       "l.idLibro NOT IN (SELECT p.libro.idLibro FROM Prestamo p WHERE p.estado = 'PRESTADO')")
+    List<Libro> findLibrosDisponibles();
     
 }

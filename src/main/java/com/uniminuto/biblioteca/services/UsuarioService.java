@@ -28,6 +28,7 @@ public interface UsuarioService {
      */
     Usuario buscarPorCorreo(String correo) throws BadRequestException;
     
+    Usuario buscarUsuarioPorId(Integer usuarioId) throws BadRequestException;
     
     UsuarioRs guardarUsuario(UsuarioRq usuario) throws BadRequestException;
     

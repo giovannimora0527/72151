@@ -1,7 +1,7 @@
 package com.uniminuto.biblioteca.servicesimpl;
 
 import com.uniminuto.biblioteca.entity.Usuario;
-import com.uniminuto.biblioteca.model.RespuestaGenericaRs;
+import com.uniminuto.biblioteca.model.RespuestaGenericaRs;  
 import com.uniminuto.biblioteca.model.UsuarioRq;
 import com.uniminuto.biblioteca.model.UsuarioRs;
 import com.uniminuto.biblioteca.repository.UsuarioRepository;
@@ -40,6 +40,15 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Override
     public List<Usuario> listarTodo() throws BadRequestException {
         return this.usuarioRepository.findAll();
+    }
+    
+    @Override
+    public Usuario buscarUsuarioPorId(Integer usuarioId) throws BadRequestException {
+        Optional<Usuario> optUsuario = this.usuarioRepository.findById(usuarioId);
+        if (!optUsuario.isPresent()) {
+            throw new BadRequestException("No se encuentra el usuario con el id " + usuarioId);
+        }
+        return optUsuario.get();
     }
 
     @Override
