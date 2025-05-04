@@ -2,9 +2,7 @@ package com.uniminuto.biblioteca.services;
 
 import com.uniminuto.biblioteca.entity.Libro;
 import com.uniminuto.biblioteca.model.LibroRq;
-import com.uniminuto.biblioteca.model.LibroRs;
 import com.uniminuto.biblioteca.model.RespuestaGenericaRs;
-import java.time.LocalDateTime;
 import java.util.List;
 import org.apache.coyote.BadRequestException;
 
