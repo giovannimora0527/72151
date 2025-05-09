@@ -49,10 +49,10 @@ public class Prestamo implements Serializable {
     private LocalDateTime fechaPrestamo;
 
     @Column(name = "fecha_devolucion", nullable = false)
-    private LocalDate fechaDevolucion;
+    private LocalDateTime fechaDevolucion;
 
     @Column(name = "fecha_entrega")
-    private LocalDate fechaEntrega;
+    private LocalDateTime fechaEntrega;
     
     /**
      * Estado actual del préstamo (PRESTADO, DEVUELTO, VENCIDO).
@@ -65,6 +65,6 @@ public class Prestamo implements Serializable {
     public enum EstadoPrestamo {
         PRESTADO,
         DEVUELTO,
-        VENCIDO }
-    
+        VENCIDO,
+        ARCHIVADO }
 }

@@ -1,6 +1,5 @@
 package com.uniminuto.biblioteca.model;
 
-import java.time.LocalDateTime;
 import lombok.Data;
 
 /**
@@ -9,7 +8,7 @@ import lombok.Data;
  */
 @Data
 public class PrestamoRq {
-    private Integer autorId;
-    private Integer libroId;
-    private LocalDateTime fechaDevolucio;
+        private Integer idusuario;
+        private Integer idlibro;
+        private String fechaDevolucion;
 }

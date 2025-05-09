@@ -53,6 +53,8 @@ public interface LibroService {
     List<Libro> obtenerLibroXRangoPublicacion(Integer anioIni, 
             Integer anioFin) throws BadRequestException;
     
+    Libro save(Libro libro);
+    
     /**
      * 
      * @param LibroRq
