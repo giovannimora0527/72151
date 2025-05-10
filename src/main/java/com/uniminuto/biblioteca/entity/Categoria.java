@@ -15,7 +15,7 @@ import lombok.Data;
  */
 @Data
 @Entity
-@Table(name = "categoria")
+@Table(name = "categorias")
 public class Categoria implements Serializable {
 
     /**
