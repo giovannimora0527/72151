@@ -1,91 +1,84 @@
 package com.uniminuto.biblioteca.entity;
 
+import java.io.Serializable;
 import java.time.LocalDate;
-import javax.persistence.Entity;
+import java.time.LocalDateTime;
+import javax.persistence.Column;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import lombok.Data;
 
+/**
+ * Entidad que representa un préstamo de un libro por un usuario.
+ */
 @Entity
-public class Prestamo {
+@Table(name = "prestamos")
+@Data
+public class Prestamo implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * Identificador único del préstamo.
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "id_prestamo")
+    private Integer idPrestamo;
 
-    private String estado; // PRESTADO, DEVUELTO, VENCIDO
-
-    private LocalDate fechaPrestamo;
-
-    private LocalDate fechaDevolucion;
-
-    private LocalDate fechaEntrega;
-
+    /**
+     * Usuario que realiza el préstamo.
+     */
     @ManyToOne
-    @JoinColumn(name = "libro_id")
-    private Libro libro;
-
-    @ManyToOne
-    @JoinColumn(name = "usuario_id")
+    @JoinColumn(name = "id_usuario", nullable = false)
     private Usuario usuario;
 
-    // Getters y setters
+    /**
+     * Libro que ha sido prestado.
+     */
+    @ManyToOne
+    @JoinColumn(name = "id_libro", nullable = false)
+    private Libro libro;
 
-    public Long getId() {
-        return id;
-    }
+    /**
+     * Fecha y hora del préstamo.
+     */
+    @Column(name = "fecha_prestamo")
+    private LocalDateTime fechaPrestamo;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    /**
+     * Fecha límite de devolución.
+     */
+    @Column(name = "fecha_devolucion", nullable = false)
+    private LocalDateTime fechaDevolucion;
+    
+    
+    /**
+     * Fecha límite de devolución.
+     */
+    @Column(name = "fecha_entrega")
+    private LocalDateTime fechaEntrega;
 
-    public String getEstado() {
-        return estado;
-    }
+    /**
+     * Estado actual del préstamo.
+     */
+    @Enumerated(EnumType.STRING)
+    @Column(name = "estado", nullable = false)
+    private EstadoPrestamo estado = EstadoPrestamo.PRESTADO;
 
-    public void setEstado(String estado) {
-        this.estado = estado;
-    }
-
-    public LocalDate getFechaPrestamo() {
-        return fechaPrestamo;
-    }
-
-    public void setFechaPrestamo(LocalDate fechaPrestamo) {
-        this.fechaPrestamo = fechaPrestamo;
-    }
-
-    public LocalDate getFechaDevolucion() {
-        return fechaDevolucion;
-    }
-
-    public void setFechaDevolucion(LocalDate fechaDevolucion) {
-        this.fechaDevolucion = fechaDevolucion;
-    }
-
-    public LocalDate getFechaEntrega() {
-        return fechaEntrega;
-    }
-
-    public void setFechaEntrega(LocalDate fechaEntrega) {
-        this.fechaEntrega = fechaEntrega;
-    }
-
-    public Libro getLibro() {
-        return libro;
-    }
-
-    public void setLibro(Libro libro) {
-        this.libro = libro;
-    }
-
-    public Usuario getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
+    /**
+     * Enum que representa los posibles estados del préstamo.
+     */
+    public enum EstadoPrestamo {
+        PRESTADO,
+        DEVUELTO,
+        VENCIDO
     }
 }

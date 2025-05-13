@@ -1,7 +1,6 @@
 package com.uniminuto.biblioteca.api;
 
 import com.uniminuto.biblioteca.entity.Usuario;
-import com.uniminuto.biblioteca.model.RespuestaGenericaRs;
 import com.uniminuto.biblioteca.model.UsuarioRq;
 import com.uniminuto.biblioteca.model.UsuarioRs;
 import java.util.List;
@@ -48,19 +47,34 @@ public interface UsuarioApi {
     ResponseEntity<Usuario> buscarUsuarioPorEmail(
             @RequestParam String correo)
             throws BadRequestException;
-
+    
+    /**
+     * Metodo para guardar un usuario nuevo.
+     *
+     * @return mensaje del servicio.
+     * @throws BadRequestException excepcion.
+     */
     @RequestMapping(value = "/guardar-usuario",
             produces = {"application/json"},
             consumes = {"application/json"},
             method = RequestMethod.POST)
-    ResponseEntity<UsuarioRs> guardarUsuario(@RequestBody UsuarioRq usuario)
+    ResponseEntity<UsuarioRs> guardarUsuario(
+            @RequestBody UsuarioRq usuarioNuevo)
             throws BadRequestException;
     
+    
+    /**
+     * Metodo para actualizar un usuario.
+     *
+     * @return mensaje del servicio.
+     * @throws BadRequestException excepcion.
+     */
     @RequestMapping(value = "/actualizar-usuario",
             produces = {"application/json"},
             consumes = {"application/json"},
             method = RequestMethod.POST)
-    ResponseEntity<RespuestaGenericaRs> actualizarUsuario(@RequestBody Usuario usuario)
+    ResponseEntity<UsuarioRs> actualizarUsuario(
+            @RequestBody Usuario usuarioActualizar)
             throws BadRequestException;
 
 }

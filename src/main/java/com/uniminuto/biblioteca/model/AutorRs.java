@@ -7,11 +7,7 @@ import lombok.Data;
  * @author lmora
  */
 @Data
-public class RespuestaGenericaRs {
-    /**
-     * Status del servicio.
-     */
-    private Integer status;
+public class AutorRs {
     /**
      * Mensaje del servicio.
      */

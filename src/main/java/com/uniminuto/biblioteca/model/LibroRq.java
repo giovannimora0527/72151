@@ -8,11 +8,25 @@ import lombok.Data;
  */
 @Data
 public class LibroRq {
-
-    private Integer anioPublicacion;
-    private Integer autorId;
-    private Integer categoriaId;
-    private Integer existencias;
+    /**
+     * titulo.
+     */
     private String titulo;
-
+    /**
+     * categoriaId.
+     */
+    private Integer categoriaId;
+    /**
+     * anioPublicacion.
+     */
+    private Integer anioPublicacion;
+    /**
+     * existencias.
+     */
+    private Integer existencias;
+    /**
+     * autorId.
+     */
+    private Integer autorId;
+   
 }

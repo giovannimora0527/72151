@@ -8,5 +8,12 @@ import lombok.Data;
  */
 @Data
 public class UsuarioRs {
-    private String message;
+    /**
+     * Respuesta del servicio.
+     */
+   private String message;
+   /**
+    * Status de la peticion. 
+    */
+   private Integer status;   
 }
