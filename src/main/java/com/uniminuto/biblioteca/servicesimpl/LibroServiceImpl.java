@@ -20,6 +20,7 @@ import java.util.Optional;
 import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import javax.transaction.Transactional;
 
 /**
  *
@@ -65,7 +66,8 @@ public class LibroServiceImpl implements LibroService {
         }
         List<Libro> librosAutor = this.libroRepository.findByAutor(autor);
         return !librosAutor.isEmpty()
-                ? librosAutor : Collections.EMPTY_LIST;
+                ? librosAutor
+                : Collections.EMPTY_LIST;
     }
 
     @Override
@@ -112,7 +114,8 @@ public class LibroServiceImpl implements LibroService {
         List<Libro> librosParaPrestamo = new ArrayList<>();
         for (Libro libro : libros) {
             listPrestamoByLibro = this.prestamoRepository.findByLibro(libro);
-            // Verificar si no hay préstamos activos o si el préstamo está en estado DEVUELTO
+            // Verificar si no hay préstamos activos o si el préstamo está en estado
+            // DEVUELTO
             boolean libroDisponible = true;
             if (libro.getExistencias() == 0) {
                 libroDisponible = false;
@@ -125,7 +128,8 @@ public class LibroServiceImpl implements LibroService {
                 }
             }
 
-            // Si el libro no tiene préstamos activos o todos los préstamos están devueltos, lo agregamos a la lista
+            // Si el libro no tiene préstamos activos o todos los préstamos están devueltos,
+            // lo agregamos a la lista
             if (libroDisponible) {
                 librosParaPrestamo.add(libro);
             }
@@ -199,7 +203,8 @@ public class LibroServiceImpl implements LibroService {
         }
         Optional<Categoria> optCat = this.categoriaRepository.findById(actualizarLibro.getCategoria().getCategoriaId());
         if (!optCat.isPresent()) {
-            throw new BadRequestException("No existe la categoría con ID " + actualizarLibro.getCategoria().getCategoriaId());
+            throw new BadRequestException(
+                    "No existe la categoría con ID " + actualizarLibro.getCategoria().getCategoriaId());
         }
         Categoria categoria = optCat.get();
 
@@ -221,7 +226,7 @@ public class LibroServiceImpl implements LibroService {
      * Funcion que valida si hay cambios en un registro.
      *
      * @param actual dato entrante de bd.
-     * @param nuevo dato desde el front.
+     * @param nuevo  dato desde el front.
      * @return true/false si hay cambios.
      */
     private boolean hayCambiosEnLibro(Libro actual, Libro nuevo) {
@@ -234,5 +239,117 @@ public class LibroServiceImpl implements LibroService {
                 || !actual.getAutor().getAutorId().equals(nuevo.getAutor().getAutorId())
                 || !actual.getCategoria().getCategoriaId().equals(nuevo.getCategoria().getCategoriaId())
                 || !actual.getExistencias().equals(nuevo.getExistencias());
+    }
+
+    @Override
+    @Transactional
+    public List<Libro> guardarLibrosMasivo(List<LibroRq> libros) throws BadRequestException {
+        if (libros == null || libros.isEmpty()) {
+            throw new BadRequestException("La lista de libros no puede estar vacía");
+        }
+
+        // Validar duplicados en el archivo de entrada
+        validarDuplicadosEnArchivo(libros);
+
+        // Validar duplicados con la BD
+        validarDuplicadosEnBD(libros);
+
+        // Si llegamos aquí, no hay duplicados, procedemos a guardar
+        List<Libro> librosGuardados = new ArrayList<>();
+        int fila = 1;
+
+        for (LibroRq libroRq : libros) {
+            try {
+                // Validar campos requeridos
+                if (libroRq.getTitulo() == null || libroRq.getTitulo().trim().isEmpty()) {
+                    throw new BadRequestException("El título en la fila " + fila + " es requerido");
+                }
+                if (libroRq.getAutorId() == null) {
+                    throw new BadRequestException("El autor en la fila " + fila + " es requerido");
+                }
+                if (libroRq.getCategoriaId() == null) {
+                    throw new BadRequestException("La categoría en la fila " + fila + " es requerida");
+                }
+                if (libroRq.getExistencias() == null) {
+                    throw new BadRequestException("Las existencias en la fila " + fila + " son requeridas");
+                }
+                if (libroRq.getExistencias() < 0) {
+                    throw new BadRequestException("Las existencias en la fila " + fila + " no pueden ser negativas");
+                }
+
+                // Validar que el autor existe
+                Autor autor = autorService.obtenerAutorPorId(libroRq.getAutorId());
+                if (autor == null) {
+                    throw new BadRequestException("El autor con ID " + libroRq.getAutorId()
+                            + " en la fila " + fila + " no existe");
+                }
+
+                // Validar que la categoría existe
+                Optional<Categoria> optCategoria = categoriaRepository.findById(libroRq.getCategoriaId());
+                if (!optCategoria.isPresent()) {
+                    throw new BadRequestException("La categoría con ID " + libroRq.getCategoriaId()
+                            + " en la fila " + fila + " no existe");
+                }
+
+                // Validar año de publicación si se proporciona
+                if (libroRq.getAnioPublicacion() != null) {
+                    int anioActual = java.time.LocalDate.now().getYear();
+                    if (libroRq.getAnioPublicacion() > anioActual) {
+                        throw new BadRequestException("El año de publicación en la fila " + fila
+                                + " no puede ser futuro");
+                    }
+                }
+
+                // Convertir y guardar libro
+                Libro libro = convertirLibroRqToLibro(libroRq);
+                librosGuardados.add(libroRepository.save(libro));
+
+            } catch (BadRequestException e) {
+                throw new BadRequestException("Error en la fila " + fila + ": " + e.getMessage());
+            }
+            fila++;
+        }
+
+        return librosGuardados;
+    }
+
+    /**
+     * Valida que no existan duplicados en el archivo de entrada.
+     * 
+     * @param libros Lista de libros a validar
+     * @throws BadRequestException si se encuentran duplicados
+     */
+    private void validarDuplicadosEnArchivo(List<LibroRq> libros) throws BadRequestException {
+        // Validar títulos duplicados en el archivo
+        for (int i = 0; i < libros.size(); i++) {
+            for (int j = i + 1; j < libros.size(); j++) {
+                LibroRq libro1 = libros.get(i);
+                LibroRq libro2 = libros.get(j);
+
+                if (libro1.getTitulo().equalsIgnoreCase(libro2.getTitulo())) {
+                    throw new BadRequestException(
+                            String.format("El título '%s' está duplicado en las filas %d y %d",
+                                    libro1.getTitulo(), i + 1, j + 1));
+                }
+            }
+        }
+    }
+
+    /**
+     * Valida que no existan duplicados con registros en la base de datos.
+     * 
+     * @param libros Lista de libros a validar
+     * @throws BadRequestException si se encuentran duplicados
+     */
+    private void validarDuplicadosEnBD(List<LibroRq> libros) throws BadRequestException {
+        for (int i = 0; i < libros.size(); i++) {
+            LibroRq libro = libros.get(i);
+
+            if (libroRepository.existsByTitulo(libro.getTitulo())) {
+                throw new BadRequestException(
+                        String.format("El título '%s' en la fila %d ya existe en la base de datos",
+                                libro.getTitulo(), i + 1));
+            }
+        }
     }
 }

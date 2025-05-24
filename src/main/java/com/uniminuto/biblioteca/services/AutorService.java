@@ -8,6 +8,7 @@ import org.apache.coyote.BadRequestException;
 
 /**
  * Interfaz del servicio.
+ * 
  * @author lmora
  */
 public interface AutorService {
@@ -16,7 +17,7 @@ public interface AutorService {
      * Obtiene un listado de todos los autores registrados en el sistema.
      *
      * @return una lista con todos los autores disponibles, o una lista vacía si
-     * no hay autores registrados
+     *         no hay autores registrados
      */
     List<Autor> obtenerListadoAutores();
 
@@ -25,10 +26,10 @@ public interface AutorService {
      *
      * @param nacionalidad la nacionalidad por la cual filtrar los autores
      * @return una lista de autores que coinciden con la nacionalidad
-     * especificada, o una lista vacía si no se encuentran coincidencias
+     *         especificada, o una lista vacía si no se encuentran coincidencias
      * @throws BadRequestException si el parámetro nacionalidad es nulo o vacío
      */
-    List<Autor> obtenerListadoAutoresPorNacionalidad(String nacionalidad) 
+    List<Autor> obtenerListadoAutoresPorNacionalidad(String nacionalidad)
             throws BadRequestException;
 
     /**
@@ -37,7 +38,7 @@ public interface AutorService {
      * @param autorId el identificador único del autor a buscar
      * @return el objeto Autor correspondiente al ID proporcionado
      * @throws BadRequestException si el ID proporcionado es nulo, no existe o
-     * no es válido
+     *                             no es válido
      */
     Autor obtenerAutorPorId(Integer autorId) throws BadRequestException;
 
@@ -46,9 +47,10 @@ public interface AutorService {
      *
      * @param autorRq objeto de solicitud con los datos del autor a crear
      * @return objeto de respuesta genérica que indica el resultado de la
-     * operación
+     *         operación
      * @throws BadRequestException si los datos proporcionados son inválidos,
-     * incompletos o si ya existe un autor con el mismo nombre
+     *                             incompletos o si ya existe un autor con el mismo
+     *                             nombre
      */
     RespuestaGenericaRs crearAutor(AutorRq autorRq) throws BadRequestException;
 
@@ -57,10 +59,20 @@ public interface AutorService {
      *
      * @param autor objeto Autor con los datos actualizados
      * @return objeto de respuesta genérica que indica el resultado de la
-     * operación
+     *         operación
      * @throws BadRequestException si el autor no existe, si los datos
-     * proporcionados son inválidos o si ocurre un error durante la
-     * actualización
+     *                             proporcionados son inválidos o si ocurre un error
+     *                             durante la
+     *                             actualización
      */
     RespuestaGenericaRs actualizarAutor(Autor autor) throws BadRequestException;
+
+    /**
+     * Guarda múltiples autores de forma masiva.
+     * 
+     * @param autores Lista de autores a guardar.
+     * @return Lista de autores creados.
+     * @throws BadRequestException si hay errores de validación o duplicados.
+     */
+    List<Autor> guardarAutoresMasivo(List<AutorRq> autores) throws BadRequestException;
 }

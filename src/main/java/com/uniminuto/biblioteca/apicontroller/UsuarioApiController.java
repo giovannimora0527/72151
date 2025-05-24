@@ -23,17 +23,17 @@ public class UsuarioApiController implements UsuarioApi {
      */
     @Autowired
     private UsuarioService usuarioService;
-    
+
     @Override
     public ResponseEntity<List<Usuario>> listarUsuarios() throws BadRequestException {
         return ResponseEntity.ok(this.usuarioService.listarTodo());
     }
-    
+
     @Override
     public ResponseEntity<Usuario> buscarUsuarioPorEmail(String correo) throws BadRequestException {
         return ResponseEntity.ok(this.usuarioService.buscarPorCorreo(correo));
     }
-    
+
     @Override
     public ResponseEntity<UsuarioRs> guardarUsuario(UsuarioRq usuarioNuevo) throws BadRequestException {
         return ResponseEntity.ok(this.usuarioService.guardarUsuarioNuevo(usuarioNuevo));
@@ -43,5 +43,9 @@ public class UsuarioApiController implements UsuarioApi {
     public ResponseEntity<UsuarioRs> actualizarUsuario(Usuario usuarioActualizar) throws BadRequestException {
         return ResponseEntity.ok(this.usuarioService.actualizarUsuario(usuarioActualizar));
     }
-    
+
+    @Override
+    public ResponseEntity<List<Usuario>> cargarUsuariosMasivo(List<UsuarioRq> usuarios) throws BadRequestException {
+        return ResponseEntity.ok(this.usuarioService.guardarUsuariosMasivo(usuarios));
+    }
 }

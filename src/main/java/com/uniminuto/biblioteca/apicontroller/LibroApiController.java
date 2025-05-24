@@ -34,8 +34,7 @@ public class LibroApiController implements LibroApi {
     }
 
     @Override
-    public ResponseEntity<List<Libro>>
-            obtenerLibroPorAutor(Integer autorId) throws BadRequestException {
+    public ResponseEntity<List<Libro>> obtenerLibroPorAutor(Integer autorId) throws BadRequestException {
         return ResponseEntity.ok(this.libroService.obtenerLibrosPorAutor(autorId));
     }
 
@@ -60,13 +59,18 @@ public class LibroApiController implements LibroApi {
 
     @Override
     public ResponseEntity<List<Libro>> listarLibrosParaPrestamo() throws BadRequestException {
-       return ResponseEntity.ok(this.libroService.listarLibrosDisponibles());
+        return ResponseEntity.ok(this.libroService.listarLibrosDisponibles());
     }
 
     @Override
-    public ResponseEntity<RespuestaGenericaRs> actualizarLibro(Libro libro) 
+    public ResponseEntity<RespuestaGenericaRs> actualizarLibro(Libro libro)
             throws BadRequestException {
         return ResponseEntity.ok(this.libroService.actualizarLibro(libro));
+    }
+
+    @Override
+    public ResponseEntity<List<Libro>> cargarLibrosMasivo(List<LibroRq> libros) throws BadRequestException {
+        return ResponseEntity.ok(this.libroService.guardarLibrosMasivo(libros));
     }
 
 }

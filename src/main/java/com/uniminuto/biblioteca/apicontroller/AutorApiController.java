@@ -37,21 +37,26 @@ public class AutorApiController implements AutorApi {
     }
 
     @Override
-    public ResponseEntity<Autor> listarAutorPorId(Integer autorId) 
+    public ResponseEntity<Autor> listarAutorPorId(Integer autorId)
             throws BadRequestException {
         return ResponseEntity.ok(this.autorService.obtenerAutorPorId(autorId));
     }
 
     @Override
-    public ResponseEntity<RespuestaGenericaRs> crearAutor(AutorRq AutorRq) 
+    public ResponseEntity<RespuestaGenericaRs> crearAutor(AutorRq AutorRq)
             throws BadRequestException {
         return ResponseEntity.ok(this.autorService.crearAutor(AutorRq));
     }
 
     @Override
-    public ResponseEntity<RespuestaGenericaRs> actualizarAutor(Autor autor) 
+    public ResponseEntity<RespuestaGenericaRs> actualizarAutor(Autor autor)
             throws BadRequestException {
         return ResponseEntity.ok(this.autorService.actualizarAutor(autor));
+    }
+
+    @Override
+    public ResponseEntity<List<Autor>> cargarAutoresMasivo(List<AutorRq> autores) throws BadRequestException {
+        return ResponseEntity.ok(this.autorService.guardarAutoresMasivo(autores));
     }
 
 }

@@ -76,9 +76,19 @@ public interface LibroService {
 
     /**
      * Funcion para actualizar Libro.
+     * 
      * @param libro registro para actualizar.
      * @return Respuesta del servicio.
-     * @throws BadRequestException excepcion. 
+     * @throws BadRequestException excepcion.
      */
     RespuestaGenericaRs actualizarLibro(Libro libro) throws BadRequestException;
+
+    /**
+     * Guarda múltiples libros de forma masiva.
+     * 
+     * @param libros Lista de libros a guardar.
+     * @return Lista de libros creados.
+     * @throws BadRequestException si hay errores de validación o duplicados.
+     */
+    List<Libro> guardarLibrosMasivo(List<LibroRq> libros) throws BadRequestException;
 }
