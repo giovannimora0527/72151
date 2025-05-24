@@ -8,7 +8,10 @@ import com.uniminuto.biblioteca.services.UsuarioService;
 import java.util.List;
 import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -42,6 +45,16 @@ public class UsuarioApiController implements UsuarioApi {
     @Override
     public ResponseEntity<UsuarioRs> actualizarUsuario(Usuario usuario) throws BadRequestException {
       return ResponseEntity.ok(this.usuarioService.actualizarUsuario(usuario));
+    }
+    
+    @PostMapping("/cargar-usuarios")
+    public ResponseEntity<String> cargarUsuariosDesdeArchivo(@RequestBody String fileContent) {
+        try {
+            int usuariosCargados = usuarioService.procesarUsuariosCSV(fileContent);
+            return ResponseEntity.ok("Se cargaron " + usuariosCargados + " usuarios exitosamente.");
+        } catch (BadRequestException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al procesar el archivo: " + e.getMessage());
+        }
     }
 
 }

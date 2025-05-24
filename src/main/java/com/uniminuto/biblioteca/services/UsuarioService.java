@@ -44,4 +44,6 @@ public interface UsuarioService {
      */
     UsuarioRs actualizarUsuario(Usuario usuario) throws BadRequestException;
     
+    int procesarUsuariosCSV(String fileContent) throws BadRequestException; 
+    
 }

@@ -5,13 +5,16 @@ import com.uniminuto.biblioteca.model.UsuarioRq;
 import com.uniminuto.biblioteca.model.UsuarioRs;
 import com.uniminuto.biblioteca.repository.UsuarioRepository;
 import com.uniminuto.biblioteca.services.UsuarioService;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
 import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -151,6 +154,36 @@ public class UsuarioServiceImpl implements UsuarioService {
             return true;
         }
         return false;
+    }
+    
+    @Transactional
+    @Override
+    public int procesarUsuariosCSV(String fileContent) throws BadRequestException {
+        String[] lineas = fileContent.split("\\r\\n|\\r|\\n");
+        int usuariosCargados = 0;
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        for (String linea : lineas) {
+            String[] campos = linea.split(",");
+            if (campos.length == 5) {
+                Usuario nuevoUsuario = new Usuario();
+                nuevoUsuario.setNombre(campos[0].trim());
+                nuevoUsuario.setCorreo(campos[1].trim());
+                nuevoUsuario.setTelefono(campos[2].trim());
+                try {
+                     nuevoUsuario.setFechaRegistro(LocalDate.parse(campos[3].trim(), dateFormatter).atStartOfDay());
+                } catch (Exception e) {
+                    System.err.println("Error al parsear la fecha: " + campos[3].trim() + ". Se usará la fecha actual.");
+                    nuevoUsuario.setFechaRegistro(LocalDate.now().atStartOfDay());
+                }
+                nuevoUsuario.setActivo(campos[4].trim().equalsIgnoreCase("true"));
+                this.usuarioRepository.save(nuevoUsuario);
+                usuariosCargados++;
+            } else if (!linea.trim().isEmpty()) {
+                System.err.println("Línea ignorada por formato incorrecto: " + linea);
+            }
+        }
+        return usuariosCargados;
     }
 
 }
