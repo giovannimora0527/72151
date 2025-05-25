@@ -31,6 +31,11 @@ public class UsuarioApiController implements UsuarioApi {
     }
     
     @Override
+    public ResponseEntity<List<Usuario>> obtenerUsuariosSinMultas() throws BadRequestException {
+        return ResponseEntity.ok(this.usuarioService.obtenerUsuariosSinMultas());
+    }
+    
+    @Override
     public ResponseEntity<Usuario> buscarUsuarioPorId(Integer usuarioId) throws BadRequestException {
        return ResponseEntity.ok(this.usuarioService.buscarUsuarioPorId(usuarioId));
     }

@@ -43,6 +43,11 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
     
     @Override
+    public List<Usuario> obtenerUsuariosSinMultas() {
+        return usuarioRepository.findUsuariosSinMultas();
+    }
+    
+    @Override
     public Usuario buscarUsuarioPorId(Integer usuarioId) throws BadRequestException {
         Optional<Usuario> optUsuario = this.usuarioRepository.findById(usuarioId);
         if (!optUsuario.isPresent()) {
@@ -116,8 +121,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     @Override
     public RespuestaGenericaRs actualizarUsuario(Usuario usuario) throws BadRequestException {
-        Optional<Usuario> optUser = this.usuarioRepository
-                .findById(usuario.getIdUsuario());
+        Optional<Usuario> optUser = this.usuarioRepository.findById(usuario.getIdUsuario());
         if (!optUser.isPresent()) {
             throw new BadRequestException("No existe el usuario.");
         }

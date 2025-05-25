@@ -12,6 +12,7 @@ import com.uniminuto.biblioteca.services.UsuarioService;
 import com.uniminuto.biblioteca.repository.UsuarioRepository;
 import com.uniminuto.biblioteca.services.LibroService;
 import com.uniminuto.biblioteca.repository.LibroRepository;
+import com.uniminuto.biblioteca.services.MultaService;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
@@ -36,13 +37,10 @@ public class PrestamoServiceImpl implements PrestamoService {
     private UsuarioService usuarioService;
     
     @Autowired
-    private UsuarioRepository usuarioRepository;
-    
-    @Autowired
     private LibroService libroService;
     
     @Autowired
-    private LibroRepository libroRepository;
+    private MultaService multaService;
     
     @Override
     public List<Prestamo> listarPrestamos() throws BadRequestException {
@@ -123,6 +121,12 @@ public class PrestamoServiceImpl implements PrestamoService {
             prestamoActual.setEstado(EstadoPrestamo.DEVUELTO);
         } else {
             prestamoActual.setEstado(EstadoPrestamo.VENCIDO);
+            
+            /* 
+            /* Y generamos la multa
+            */
+            
+            multaService.guardarMulta(prestamoActual);
         }
 
         this.prestamoRepository.save(prestamoActual);

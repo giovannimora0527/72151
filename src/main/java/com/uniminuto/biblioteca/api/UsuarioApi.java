@@ -35,6 +35,19 @@ public interface UsuarioApi {
             throws BadRequestException;
     
     /**
+     * Metodo para listar los usuarios sin multas ACTIVAS/PENDIENTES en BD.
+     *
+     * @return Lista de usuarios sin multas.
+     * @throws BadRequestException excepcion.
+     */
+    @RequestMapping(value = "/listar-usuarios-sin-multas-activas",
+            produces = {"application/json"},
+            consumes = {"application/json"},
+            method = RequestMethod.GET)
+    ResponseEntity<List<Usuario>> obtenerUsuariosSinMultas()
+            throws BadRequestException;
+    
+    /**
      * Metodo para listar los usuarios por id.
      *
      * @param id correo a buscar.
@@ -59,8 +72,7 @@ public interface UsuarioApi {
             produces = {"application/json"},
             consumes = {"application/json"},
             method = RequestMethod.GET)
-    ResponseEntity<Usuario> buscarUsuarioPorEmail(
-            @RequestParam String correo)
+    ResponseEntity<Usuario> buscarUsuarioPorEmail(@RequestParam String correo)
             throws BadRequestException;
 
     @RequestMapping(value = "/guardar-usuario",

@@ -30,8 +30,7 @@ public class AutorApiController implements AutorApi {
 
     @Override
     public ResponseEntity<List<Autor>> listarAutoresByNacionalidad(Integer nacionalidad) throws BadRequestException {
-       return ResponseEntity.ok(this.autorService
-               .obtenerListadoAutoresPorNacionalidad(nacionalidad));
+       return ResponseEntity.ok(this.autorService.obtenerListadoAutoresPorNacionalidad(nacionalidad));
     }
 
     @Override

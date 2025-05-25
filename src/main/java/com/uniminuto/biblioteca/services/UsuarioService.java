@@ -20,6 +20,8 @@ public interface UsuarioService {
      */
     List<Usuario> listarTodo() throws BadRequestException;
     
+    List<Usuario> obtenerUsuariosSinMultas() throws BadRequestException;
+    
     /**
      * Busca un usuario dado un email.
      * @param correo email a buscar.
